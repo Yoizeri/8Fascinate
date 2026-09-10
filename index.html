@@ -1139,14 +1139,14 @@ Made with care by 404 for class VIII Fascinate.
         function startApp() {
             const sessionStr = sessionStorage.getItem('session');
             if(!sessionStr) {
-                document.getElementById('login-page').style.display = 'flex';
-                document.getElementById('main-app').style.display = 'none';
+                document.getElementById('login-page').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('hidden');
                 return;
             }
             
             const session = JSON.parse(sessionStr);
-            document.getElementById('login-page').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
             document.getElementById('header-username').innerText = session.username;
             
             if(session.isAdmin) {
