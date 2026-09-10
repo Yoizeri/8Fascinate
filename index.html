@@ -3,24 +3,31 @@
 <!--
 VIII Fascinate Class Website
 Creator: 404
-Version: 1.0.3
+Version: 1.1.0 (Aesthetic & Performance Update)
 Created: 2026
 Class: VIII Fascinate 2026/2027
 
+SETUP INSTRUCTIONS:
+1. Save this file as index.html
+2. Upload to Vercel or GitHub Pages
+3. Share link with class
+
 LOGIN CREDENTIALS:
 MEMBER: Any username + password (first login sets the password)
-ADMIN: username = "NotHereKid", password = "NotHereEither"
+ADMIN: username = "NotHereKid", password = "Nope"
 
 FEATURES:
 • Gallery (upload/view photos)
 • Profil (member directory)
 • Prestasi (achievements)
 • Forum (class messages)
-• Pengaturan (settings)
+• Pengaturan (settings) + CUSTOM AESTHETIC BACKGROUND
 • Admin Panel (for admin only)
 
 DATA STORAGE: All data in browser LocalStorage
-PERFORMANCE: < 250ms load time, < 150KB file size
+PERFORMANCE: < 250ms load time, < 150KB file size, Auto Image Compress
+DESIGN: Nature aesthetic (green theme) with Glassmorphism
+SECURITY: SHA-256 password for admin & members, soft delete for safety
 Made with care by 404 for class VIII Fascinate.
 -->
 <head>
@@ -37,26 +44,34 @@ Made with care by 404 for class VIII Fascinate.
             /* Typography & Spacing */
             --text-main: var(--primary); --text-sec: var(--brown); --text-light: var(--bg);
             --font-sm: 12px; --font-base: 14px; --font-lg: 16px; --font-xl: 24px; --font-xxl: 32px;
-            --radius: 20px; --shadow: 0 4px 8px rgba(27,94,32,0.1); --trans: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 20px; --shadow: 0 8px 16px rgba(0,0,0,0.1); --trans: 300ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Base & Background Logic */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Verdana, sans-serif; }
+        body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            font-size: var(--font-base); 
+            line-height: 1.5; 
+            overflow-x: hidden; 
+            transition: background var(--trans);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        h1, h2, h3 { font-weight: bold; color: var(--text-main); }
+        
         /* Dark Mode Overrides */
         body.dark-mode {
             --bg: #121212; --text-main: #F5F9F7; --text-sec: #A5D6A7; --gray: #333333;
-            --shadow: 0 4px 8px rgba(0,0,0,0.5);
+            --shadow: 0 8px 16px rgba(0,0,0,0.5);
         }
-        body.dark-mode .card, body.dark-mode .modal-box { background: #1E1E1E; border-color: #333; }
-        body.dark-mode input, body.dark-mode textarea { background: #121212; color: #fff; }
 
         /* Font Size Overrides */
         body.font-small { --font-sm: 10px; --font-base: 12px; --font-lg: 14px; --font-xl: 20px; --font-xxl: 24px; }
         body.font-large { --font-sm: 14px; --font-base: 16px; --font-lg: 18px; --font-xl: 28px; --font-xxl: 36px; }
 
-        /* Reset & Base */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Verdana, sans-serif; }
-        body { background: var(--bg); color: var(--text-main); font-size: var(--font-base); line-height: 1.5; overflow-x: hidden; transition: background var(--trans); }
-        h1, h2, h3 { font-weight: bold; color: var(--text-main); }
-        
         /* Reusable Components */
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 16px; }
         @media(min-width: 480px) { .container { padding: 24px; } }
@@ -72,13 +87,29 @@ Made with care by 404 for class VIII Fascinate.
         .btn-danger:hover { background: #b71c1c; }
         .btn-outline { background: transparent; border: 2px solid var(--sage); color: var(--text-main); }
         .btn-icon { padding: 8px; border-radius: 50%; background: none; color: inherit; cursor: pointer; border: none; transition: var(--trans); }
-        .btn-icon:hover { background: rgba(0,0,0,0.05); color: var(--mint); }
+        .btn-icon:hover { background: rgba(0,0,0,0.1); color: var(--mint); }
         
-        .card { background: var(--text-light); border-radius: var(--radius); border: 3px solid var(--sage); box-shadow: var(--shadow); padding: 16px; transition: transform var(--trans); }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(27,94,32,0.15); }
+        /* Glassmorphism Aesthetic update for elements */
+        .card, .modal-box, .stat-card, .timeline-item, .forum-msg, .login-card, .table-wrap, .admin-tab { 
+            background: rgba(245, 249, 247, 0.85); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            padding: 16px; 
+            transition: transform var(--trans), box-shadow var(--trans); 
+        }
+        body.dark-mode .card, body.dark-mode .modal-box, body.dark-mode .stat-card, body.dark-mode .timeline-item, body.dark-mode .forum-msg, body.dark-mode .login-card, body.dark-mode .table-wrap, body.dark-mode .admin-tab { 
+            background: rgba(30, 30, 30, 0.85); 
+            border-color: rgba(255, 255, 255, 0.1); 
+        }
+
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.2); }
         
-        input, textarea, select { width: 100%; padding: 12px; border: 2px solid var(--sage); border-radius: 12px; font-size: var(--font-base); background: var(--text-light); color: var(--text-main); outline: none; transition: var(--trans); }
-        input:focus, textarea:focus, select:focus { border-color: var(--light); box-shadow: 0 0 0 3px rgba(102,187,106,0.2); }
+        input, textarea, select { width: 100%; padding: 12px; border: 2px solid var(--sage); border-radius: 12px; font-size: var(--font-base); background: rgba(255,255,255,0.7); color: var(--text-main); outline: none; transition: var(--trans); }
+        body.dark-mode input, body.dark-mode textarea, body.dark-mode select { background: rgba(18, 18, 18, 0.7); color: #fff; }
+        input:focus, textarea:focus, select:focus { border-color: var(--light); box-shadow: 0 0 0 3px rgba(102,187,106,0.2); background: rgba(255,255,255,0.95); }
         
         .grid { display: grid; gap: 16px; }
         .grid-1 { grid-template-columns: 1fr; }
@@ -88,30 +119,34 @@ Made with care by 404 for class VIII Fascinate.
         /* Login Page */
         #login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary) 0%, var(--light) 100%); padding: 16px; position: relative; }
         .login-pattern { position: absolute; top:0; left:0; width:100%; height:100%; opacity: 0.08; pointer-events: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="%23FFFFFF" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/></svg>'); background-size: 40px; }
-        .login-card { background: var(--bg); border-radius: 24px; width: 100%; max-width: 400px; padding: 24px; box-shadow: 0 12px 24px rgba(0,0,0,0.2); z-index: 1; }
+        .login-card { width: 100%; max-width: 400px; padding: 24px; z-index: 1; }
         .login-header { text-align: center; margin-bottom: 24px; }
         .login-header h1 { font-size: 36px; color: var(--primary); margin-bottom: 4px; }
         .login-header p { font-size: var(--font-base); color: var(--mint); font-weight: bold; }
         
         .login-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-        .login-tab { flex: 1; min-width: 120px; background: #fff; padding: 12px; border: 3px solid var(--gray); border-radius: 12px; font-weight: bold; color: var(--primary); cursor: pointer; text-align: center; transition: var(--trans); }
-        .login-tab.active-member { border-color: var(--light); background: rgba(102,187,106,0.1); }
-        .login-tab.active-admin { border-color: var(--gold); background: rgba(212,175,55,0.1); }
+        .login-tab { flex: 1; min-width: 120px; background: rgba(255,255,255,0.7); padding: 12px; border: 3px solid var(--gray); border-radius: 12px; font-weight: bold; color: var(--primary); cursor: pointer; text-align: center; transition: var(--trans); }
+        .login-tab.active-member { border-color: var(--light); background: rgba(102,187,106,0.2); }
+        .login-tab.active-admin { border-color: var(--gold); background: rgba(212,175,55,0.2); }
         
         .input-group { position: relative; margin-bottom: 16px; }
         .input-group svg { position: absolute; right: 12px; top: 12px; width: 24px; height: 24px; color: var(--sage); cursor: pointer; }
         .error-msg { color: var(--danger); font-size: var(--font-sm); display: none; margin-bottom: 12px; font-weight: bold; }
-        .disclaimer { background: var(--gray); border-left: 4px solid var(--primary); padding: 12px; font-size: var(--font-sm); color: #555; margin-top: 24px; border-radius: 0 8px 8px 0; }
+        .disclaimer { background: rgba(224,224,224,0.7); border-left: 4px solid var(--primary); padding: 12px; font-size: var(--font-sm); color: #555; margin-top: 24px; border-radius: 0 8px 8px 0; }
         
         /* Main Dashboard Layout */
         #main-app { display: none; min-height: 100vh; display: flex; flex-direction: column; }
-        .header { position: sticky; top: 0; height: 60px; background: var(--primary); color: var(--text-light); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: var(--shadow); z-index: 100; }
+        
+        /* Glass Header & Navbar */
+        .header { position: sticky; top: 0; height: 60px; background: rgba(27, 94, 32, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--text-light); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: var(--shadow); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .header-title { font-size: var(--font-xl); font-weight: bold; }
         .header-title span { font-size: var(--font-sm); color: var(--sage); font-weight: normal; margin-left: 8px; }
         
-        .navbar { background: #fff; border-bottom: 1px solid var(--gray); overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        .navbar { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        body.dark-mode .navbar { background: rgba(18, 18, 18, 0.85); border-bottom-color: rgba(255,255,255,0.1); }
         .nav-list { display: flex; list-style: none; padding: 0; margin: 0; }
         .nav-item { padding: 16px 20px; font-weight: bold; color: var(--primary); cursor: pointer; border-bottom: 3px solid transparent; display: flex; align-items: center; gap: 8px; transition: var(--trans); }
+        body.dark-mode .nav-item { color: var(--text-main); }
         .nav-item:hover { background: rgba(165,214,167,0.2); }
         .nav-item.active { border-bottom-color: var(--light); color: var(--light); }
         .nav-item[data-tab="admin-panel"] { display: none; color: var(--gold); }
@@ -122,7 +157,9 @@ Made with care by 404 for class VIII Fascinate.
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .section-title { font-size: var(--font-xxl); margin-bottom: 24px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        /* Title styling with backdrop text-shadow for readability */
+        .section-title { font-size: var(--font-xxl); margin-bottom: 24px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; text-shadow: 0 2px 4px rgba(255,255,255,0.5); }
+        body.dark-mode .section-title { text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
         /* Gallery Tab */
         .gallery-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
@@ -145,42 +182,46 @@ Made with care by 404 for class VIII Fascinate.
         
         /* Prestasi Tab */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 32px; }
-        .stat-card { background: white; border: 3px solid var(--gold); border-radius: 16px; padding: 24px; text-align: center; }
+        .stat-card { border: 2px solid var(--gold); padding: 24px; text-align: center; }
         .stat-card svg { width: 48px; height: 48px; color: var(--gold); margin-bottom: 8px; }
         .stat-val { font-size: 36px; font-weight: bold; color: var(--primary); }
         .timeline { border-left: 3px solid var(--sage); padding-left: 24px; margin-left: 12px; position: relative; }
-        .timeline-item { position: relative; margin-bottom: 24px; background: white; padding: 16px; border-radius: 12px; border: 1px solid var(--gray); box-shadow: var(--shadow); }
-        .timeline-item::before { content: ''; position: absolute; left: -34px; top: 16px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); border: 3px solid white; }
+        .timeline-item { position: relative; margin-bottom: 24px; }
+        .timeline-item::before { content: ''; position: absolute; left: -34px; top: 16px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); border: 3px solid rgba(255,255,255,0.8); }
         .badge { display: inline-block; padding: 4px 8px; background: var(--light); color: white; border-radius: 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-top: 8px; }
         
         /* Forum Tab */
-        .forum-msg { background: white; padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--gray); position: relative; display: flex; flex-direction: column; gap: 8px; }
-        .forum-msg.own { background: rgba(165,214,167,0.15); border-color: var(--sage); }
+        .forum-msg { margin-bottom: 12px; position: relative; display: flex; flex-direction: column; gap: 8px; }
+        .forum-msg.own { background: rgba(165,214,167,0.4); border-color: var(--sage); }
+        body.dark-mode .forum-msg.own { background: rgba(165,214,167,0.15); }
         .forum-header { display: flex; justify-content: space-between; align-items: center; }
         .forum-sender { font-weight: bold; font-size: var(--font-base); color: var(--primary); }
         .forum-time { font-size: var(--font-sm); color: var(--sage); }
         .forum-text { font-size: var(--font-base); color: var(--text-sec); white-space: pre-wrap; }
         .forum-actions { display: flex; justify-content: flex-end; gap: 16px; align-items: center; }
-        .forum-input-area { position: sticky; bottom: 0; background: var(--bg); padding: 16px 0; border-top: 1px solid var(--gray); display: flex; gap: 8px; }
+        
+        /* Glass Input Area */
+        .forum-input-area { position: sticky; bottom: 0; background: rgba(245, 249, 247, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 16px; border-radius: 16px 16px 0 0; border: 1px solid rgba(255,255,255,0.4); display: flex; gap: 8px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); }
+        body.dark-mode .forum-input-area { background: rgba(30, 30, 30, 0.85); border-color: rgba(255,255,255,0.1); }
         
         /* Admin Panel */
         .admin-title { color: var(--gold); }
         .admin-nav { display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px; }
-        .admin-tab { padding: 8px 16px; background: white; border: 1px solid var(--gray); border-radius: 20px; cursor: pointer; white-space: nowrap; transition: var(--trans); }
+        .admin-tab { padding: 8px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: var(--trans); border: 2px solid transparent; }
         .admin-tab.active { background: var(--gold); color: white; border-color: var(--gold); font-weight: bold; }
         .admin-sub-content { display: none; }
         .admin-sub-content.active { display: block; }
-        .table-wrap { overflow-x: auto; background: white; border-radius: 12px; border: 1px solid var(--gray); }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 12px 16px; border-bottom: 1px solid var(--gray); font-size: var(--font-base); }
-        th { background: var(--sage); color: var(--primary); font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; text-align: left; background: transparent; }
+        th, td { padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: var(--font-base); }
+        body.dark-mode th, body.dark-mode td { border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(165,214,167,0.3); color: var(--primary); font-weight: bold; }
         .log-success { color: var(--light); font-weight: bold; }
         .log-failed { color: var(--danger); font-weight: bold; }
         
         /* Modals & Lightbox */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px; backdrop-filter: blur(4px); }
-        .modal-box { background: white; border-radius: 24px; width: 100%; max-width: 500px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; }
-        .modal-close { position: absolute; top: 16px; right: 16px; cursor: pointer; color: var(--gray); }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .modal-box { width: 100%; max-width: 500px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-close { position: absolute; top: 16px; right: 16px; cursor: pointer; color: var(--gray); font-weight: bold; font-size: 20px; }
         .lightbox-img { max-width: 100%; max-height: 80vh; border-radius: 8px; object-fit: contain; }
         
         /* Utilities */
@@ -198,7 +239,7 @@ Made with care by 404 for class VIII Fascinate.
         <div class="login-pattern"></div>
         <div class="login-card">
             <div class="login-header">
-                <h1>VIII Fascinate</h1>
+                <h1 style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);">VIII Fascinate</h1>
                 <p>Class 2026/2027</p>
             </div>
             
@@ -290,7 +331,7 @@ Made with care by 404 for class VIII Fascinate.
                     <h2>Anggota Kelas</h2>
                     <button class="btn btn-green" onclick="showModal('member-form-modal')">+ Tambah Anggota</button>
                 </div>
-                <input type="text" class="search-bar" id="search-member" placeholder="Cari nama teman..." oninput="renderMembers()">
+                <input type="text" class="search-bar card" id="search-member" placeholder="Cari nama teman..." oninput="renderMembers()" style="margin-bottom:24px;">
                 <div class="grid grid-3" id="members-container"></div>
             </div>
 
@@ -329,13 +370,14 @@ Made with care by 404 for class VIII Fascinate.
             <div id="tab-pengaturan" class="tab-content">
                 <div class="section-title"><h2>Pengaturan</h2></div>
                 <div class="card grid grid-1" style="max-width: 600px; margin: 0 auto;">
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="flex justify-between items-center mb-2">
                         <b>Dark Mode</b>
                         <label class="switch">
                             <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode(this.checked)">
                         </label>
                     </div>
-                    <div class="flex justify-between items-center mb-4">
+                    
+                    <div class="flex justify-between items-center mb-2">
                         <b>Ukuran Font</b>
                         <select id="font-size-select" onchange="changeFontSize(this.value)" style="width:150px;">
                             <option value="small">Kecil</option>
@@ -343,16 +385,31 @@ Made with care by 404 for class VIII Fascinate.
                             <option value="large">Besar</option>
                         </select>
                     </div>
-                    <hr style="border:0; border-top:1px solid var(--gray); margin: 16px 0;">
+
+                    <!-- NEW AESTHETIC BACKGROUND FEATURE -->
+                    <div class="flex justify-between items-center mb-4">
+                        <b>Latar Belakang</b>
+                        <select id="bg-select" onchange="changeBgMode(this.value)" style="width:150px;">
+                            <option value="default">Default</option>
+                            <option value="sunflower">Bunga Matahari</option>
+                            <option value="grass">Rumput Hijau</option>
+                            <option value="sunrise">Sunrise</option>
+                            <option value="custom">Custom (Upload)</option>
+                        </select>
+                    </div>
+                    <input type="file" id="custom-bg-upload" accept="image/jpeg, image/png, image/webp" class="hidden" onchange="handleBgUpload(event)">
+                    <!-- END BACKGROUND FEATURE -->
+
+                    <hr style="border:0; border-top:1px solid rgba(0,0,0,0.1); margin: 16px 0;">
                     <div class="grid grid-2">
                         <button class="btn btn-green" onclick="exportData()">📥 Export Backup</button>
                         <button class="btn btn-outline" onclick="document.getElementById('import-data').click()">📤 Restore Backup</button>
                         <input type="file" id="import-data" accept=".json" class="hidden" onchange="importData(event)">
                     </div>
-                    <hr style="border:0; border-top:1px solid var(--gray); margin: 16px 0;">
+                    <hr style="border:0; border-top:1px solid rgba(0,0,0,0.1); margin: 16px 0;">
                     <button class="btn btn-danger w-full mb-4" onclick="clearMyData()">🗑️ Clear My Browser Data</button>
                     <div class="text-center" style="font-size:12px; color:var(--text-sec);">
-                        Made by: 404<br>Version: 1.0.0<br>Class 2026/2027
+                        Made by: 404<br>Version: 1.1.0<br>Class 2026/2027
                     </div>
                 </div>
             </div>
@@ -360,7 +417,7 @@ Made with care by 404 for class VIII Fascinate.
             <!-- ADMIN PANEL -->
             <div id="tab-admin-panel" class="tab-content">
                 <div class="section-title"><h2 class="admin-title">Admin Panel</h2></div>
-                <p class="mb-4">Selamat datang, Admin! Kelola data kelas dari sini.</p>
+                <p class="mb-4 card" style="display:inline-block;">Selamat datang, Admin! Kelola data kelas dari sini.</p>
                 
                 <div class="admin-nav">
                     <div class="admin-tab active" onclick="switchAdminTab('admin-dash', this)">Dashboard</div>
@@ -383,7 +440,7 @@ Made with care by 404 for class VIII Fascinate.
                             <div class="stat-val" id="admin-stat-posts">0</div><div>Total Posts</div>
                         </div>
                     </div>
-                    <h3>Recent Activity</h3>
+                    <h3 class="mb-2">Recent Activity</h3>
                     <div class="table-wrap mt-2">
                         <table id="admin-recent-log">
                             <thead><tr><th>Waktu</th><th>User</th><th>Aksi</th><th>Status</th></tr></thead>
@@ -402,7 +459,7 @@ Made with care by 404 for class VIII Fascinate.
                 </div>
 
                 <div id="admin-content" class="admin-sub-content">
-                    <p class="mb-2">Gunakan tombol hapus di masing-masing tab (Gallery/Forum) saat login sebagai admin untuk moderasi.</p>
+                    <p class="card">Gunakan tombol hapus di masing-masing tab (Gallery/Forum) saat login sebagai admin untuk moderasi.</p>
                 </div>
 
                 <div id="admin-log" class="admin-sub-content">
@@ -427,7 +484,7 @@ Made with care by 404 for class VIII Fascinate.
                             <input type="file" id="import-data-admin" accept=".json" class="hidden" onchange="importData(event, true)">
                         </div>
                     </div>
-                    <div class="card" style="background:var(--danger-bg); border-color:var(--danger);">
+                    <div class="card" style="background:rgba(255,235,238,0.9); border-color:var(--danger);">
                         <h3 class="mb-2" style="color:var(--danger);">DANGER ZONE</h3>
                         <p class="mb-4" style="color:var(--danger);">⚠️ WARNING: This will DELETE ALL data permanently. Cannot be undone.</p>
                         <button class="btn btn-danger w-full" onclick="dangerZoneClear()">🗑️ CLEAR ALL DATA</button>
@@ -440,10 +497,10 @@ Made with care by 404 for class VIII Fascinate.
                         <input type="password" id="admin-new-pass" placeholder="Password Baru" class="mb-2">
                         <input type="password" id="admin-confirm-pass" placeholder="Konfirmasi Password Baru" class="mb-4">
                         <button class="btn btn-gold w-full" onclick="changeAdminPassword()">UPDATE PASSWORD</button>
-                        <hr style="margin:24px 0; border:0; border-top:1px solid var(--gray);">
+                        <hr style="margin:24px 0; border:0; border-top:1px solid rgba(0,0,0,0.1);">
                         <h3>System Info</h3>
                         <p style="font-size:14px; margin-top:8px;">
-                            Version: 1.0.0<br>Created: 2026<br>Storage Used: <span id="storage-usage">Calculating...</span>
+                            Version: 1.1.0<br>Created: 2026<br>Storage Used: <span id="storage-usage">Calculating...</span>
                         </p>
                     </div>
                 </div>
@@ -513,16 +570,11 @@ Made with care by 404 for class VIII Fascinate.
 
     <script>
         // --- 1. CORE UTILS & CRYPTO ---
-        // Helper to generate UUID
         const genUUID = () => 'id-' + Math.random().toString(36).substr(2, 9);
-        
-        // Sanitize input to prevent XSS
         const escapeHTML = (str) => {
             if(!str) return '';
             return String(str).replace(/[&<>'"]/g, t => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[t]));
         };
-
-        // Time ago formatter
         const timeAgo = (ms) => {
             const diff = Math.floor((Date.now() - ms) / 1000);
             if (diff < 60) return `${diff}s ago`;
@@ -531,7 +583,6 @@ Made with care by 404 for class VIII Fascinate.
             return `${Math.floor(diff/86400)}d ago`;
         };
 
-        // SHA-256 implementation using Web Crypto API
         async function sha256(message) {
             const msgBuffer = new TextEncoder().encode(message);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -539,15 +590,12 @@ Made with care by 404 for class VIII Fascinate.
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // The exact expected admin password string obfuscated to prevent plaintext reading in source code.
         const _0x1a = [65,100,109,105,110,75,101,108,97,115,56,70,50,48,50,54,33];
-        const FALLBACK_ADMIN_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; // arbitrary default to be overwritten
+        const FALLBACK_ADMIN_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; 
         
-        // Computed dynamically to match the strict AdminKelas8F2026! requirement precisely while avoiding plaintext.
         async function getExpectedAdminHash() {
             const saved = localStorage.getItem('admin_hash');
             if (saved) return saved;
-            // Generate hash from obfuscated exact string
             return await sha256(String.fromCharCode(..._0x1a));
         }
 
@@ -565,14 +613,15 @@ Made with care by 404 for class VIII Fascinate.
         // --- 3. AUDIT LOGGING ---
         function logAction(action, target, detail, status) {
             let logs = getStore('audit_log');
-            const session = JSON.parse(sessionStorage.getItem('session') || '{}');
+            const sessionStr = sessionStorage.getItem('session');
+            const session = sessionStr ? JSON.parse(sessionStr) : {};
             logs.unshift({
                 id: genUUID(),
                 timestamp: new Date().toISOString().replace('T',' ').substr(0,19),
                 user: session.username || 'unknown',
                 action, target, detail, status
             });
-            if(logs.length > 500) logs.pop(); // limit
+            if(logs.length > 500) logs.pop(); 
             setStore('audit_log', logs);
             if(session.isAdmin) renderAdminLog();
         }
@@ -595,22 +644,104 @@ Made with care by 404 for class VIII Fascinate.
                 ]);
             }
             if(!localStorage.getItem('user_preferences')) {
-                setStore('user_preferences', { darkMode: false, fontSize: 'normal' });
+                setStore('user_preferences', { darkMode: false, fontSize: 'normal', bgMode: 'default' });
             }
         }
 
-        // Apply preferences
+        // Apply preferences (Including New Aesthetic Background Logic)
         function applyPreferences() {
             const prefs = JSON.parse(localStorage.getItem('user_preferences') || '{}');
-            if(prefs.darkMode) {
-                document.body.classList.add('dark-mode');
-                document.getElementById('dark-mode-toggle').checked = true;
-            }
+            
+            // Dark Mode
+            document.body.classList.toggle('dark-mode', !!prefs.darkMode);
+            if(document.getElementById('dark-mode-toggle')) document.getElementById('dark-mode-toggle').checked = !!prefs.darkMode;
+            
+            // Font Size
             if(prefs.fontSize) {
-                document.body.className = document.body.className.replace(/font-\w+/,'');
+                document.body.className = document.body.className.replace(/font-\w+/,'').trim();
                 document.body.classList.add(`font-${prefs.fontSize}`);
-                document.getElementById('font-size-select').value = prefs.fontSize;
+                if(document.getElementById('font-size-select')) document.getElementById('font-size-select').value = prefs.fontSize;
             }
+
+            // Aesthetic Background Logic
+            const bgMode = prefs.bgMode || 'default';
+            if(document.getElementById('bg-select')) document.getElementById('bg-select').value = bgMode;
+            
+            // Reset background inline styles first
+            document.body.style.backgroundImage = '';
+            document.body.style.backgroundColor = '';
+
+            // Apply chosen background
+            if(bgMode === 'sunflower') {
+                document.body.style.backgroundImage = 'radial-gradient(circle at 80% 20%, #F9D423 0%, #FF4E50 80%, #5C258D 100%)';
+            } else if(bgMode === 'grass') {
+                document.body.style.backgroundImage = 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)';
+            } else if(bgMode === 'sunrise') {
+                document.body.style.backgroundImage = 'linear-gradient(to top, #ff0844 0%, #ffb199 100%)';
+            } else if(bgMode === 'custom') {
+                const customData = localStorage.getItem('custom_bg_data');
+                if(customData) {
+                    document.body.style.backgroundImage = `url(${customData})`;
+                } else {
+                    document.body.style.backgroundImage = 'none'; // Fallback if no custom data
+                }
+            } else {
+                document.body.style.backgroundImage = 'none';
+            }
+        }
+
+        // Handle Custom Background Upload with Auto Resize & Compress
+        function handleBgUpload(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            if(!file.type.match(/image\/(jpeg|png|webp)/)) return alert("Format gambar harus JPG, PNG, atau WebP.");
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const cvs = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    
+                    // Max dimension 1280 to save space while looking great as background
+                    const MAX = 1280; 
+                    if(w > h && w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
+                    else if (h > MAX) { w = Math.round((w * MAX) / h); h = MAX; }
+                    
+                    cvs.width = w; cvs.height = h;
+                    cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+                    
+                    // High compression WebP (0.5) for background
+                    const dataURL = cvs.toDataURL('image/webp', 0.5);
+                    
+                    try {
+                        localStorage.setItem('custom_bg_data', dataURL);
+                        let p = getStore('user_preferences');
+                        p.bgMode = 'custom';
+                        setStore('user_preferences', p);
+                        applyPreferences();
+                        logAction('change_bg', 'custom', 'success', 'success');
+                    } catch(err) {
+                        alert("Gambar terlalu besar untuk memori browser. Coba gambar yang lebih sederhana.");
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+            e.target.value = ''; // Reset input
+        }
+
+        function changeBgMode(mode) {
+            let p = getStore('user_preferences');
+            if (mode === 'custom') {
+                // Return select to previous value until a file is actually chosen
+                document.getElementById('bg-select').value = p.bgMode || 'default';
+                document.getElementById('custom-bg-upload').click();
+                return;
+            }
+            p.bgMode = mode;
+            setStore('user_preferences', p);
+            applyPreferences();
         }
 
         // --- 5. AUTHENTICATION & SESSION ---
@@ -648,7 +779,6 @@ Made with care by 404 for class VIII Fascinate.
                 let authRecord = memberAuth.find(m => m.username === userLower);
 
                 if (authRecord) {
-                    // Verifikasi password yang sudah terdaftar
                     const hashedInput = await sha256(pass);
                     if (authRecord.password !== hashedInput) {
                         const errEl = document.getElementById('member-error');
@@ -658,7 +788,6 @@ Made with care by 404 for class VIII Fascinate.
                         return;
                     }
                 } else {
-                    // Pendaftaran otomatis pada login pertama (mengunci nama dengan password)
                     const hashedPass = await sha256(pass);
                     memberAuth.push({ username: userLower, password: hashedPass });
                     setStore('member_auth', memberAuth);
@@ -787,7 +916,7 @@ Made with care by 404 for class VIII Fascinate.
             const session = JSON.parse(sessionStorage.getItem('session'));
             
             if(photos.length === 0) {
-                c.innerHTML = "<p>Belum ada foto. Jadilah yang pertama upload!</p>";
+                c.innerHTML = "<p class='card'>Belum ada foto. Jadilah yang pertama upload!</p>";
                 return;
             }
             
@@ -802,7 +931,6 @@ Made with care by 404 for class VIII Fascinate.
                 </div>
             `).join('');
             
-            // Re-bind to ensure dynamically injected UI works correctly
             document.querySelectorAll('.photo-del-btn').forEach(btn => btn.style.display = 'flex');
         }
 
@@ -847,7 +975,6 @@ Made with care by 404 for class VIII Fascinate.
                 </div>`
             }).join('');
             
-            // update stats if visible
             document.getElementById('stat-members').innerText = getStore('class_members').filter(m=>m.status==='active').length;
         }
 
@@ -893,14 +1020,14 @@ Made with care by 404 for class VIII Fascinate.
             const session = JSON.parse(sessionStorage.getItem('session'));
             
             document.getElementById('prestasi-container').innerHTML = ach.map(a => `
-                <div class="timeline-item">
+                <div class="timeline-item card" style="margin-bottom:24px;">
                     <div style="display:flex; justify-content:space-between;">
                         <div>
                             <div style="font-weight:bold; font-size:16px; color:var(--primary); display:flex; gap:8px; align-items:center;">
                                 <span style="width:20px; color:var(--gold);">${ICONS[a.type]}</span>
                                 ${escapeHTML(a.title)}
                             </div>
-                            <div style="font-size:12px; color:var(--gray-dark); margin:4px 0;">${a.date}</div>
+                            <div style="font-size:12px; margin:4px 0;">${a.date}</div>
                             <div style="color:var(--text-sec);">${escapeHTML(a.description)}</div>
                             <div class="badge">${a.type}</div>
                         </div>
@@ -945,13 +1072,13 @@ Made with care by 404 for class VIII Fascinate.
             const msgs = getStore('forum_messages').filter(m => !m.deleted).sort((a,b) => a.timestamp - b.timestamp);
             const session = JSON.parse(sessionStorage.getItem('session'));
             
-            if(msgs.length === 0) { c.innerHTML = "<p>Forum kosong.</p>"; return; }
+            if(msgs.length === 0) { c.innerHTML = "<p class='card'>Forum kosong.</p>"; return; }
             
             c.innerHTML = msgs.map(m => {
                 const isOwn = m.sender === session.username;
                 const canDel = isOwn || session.isAdmin;
                 return `
-                <div class="forum-msg ${isOwn ? 'own' : ''}">
+                <div class="forum-msg card ${isOwn ? 'own' : ''}">
                     <div class="forum-header">
                         <span class="forum-sender">${escapeHTML(m.sender)}</span>
                         <span class="forum-time">${timeAgo(m.timestamp)}</span>
@@ -966,7 +1093,6 @@ Made with care by 404 for class VIII Fascinate.
                 </div>`
             }).join('');
             
-            // Scroll to bottom
             c.scrollTop = c.scrollHeight;
         }
 
@@ -1049,6 +1175,7 @@ Made with care by 404 for class VIII Fascinate.
         function clearMyData() {
             confirmAction("Hapus preferensi lokal Anda? Ini tidak menghapus data kelas.", () => {
                 localStorage.removeItem('user_preferences');
+                localStorage.removeItem('custom_bg_data');
                 window.location.reload();
             });
         }
@@ -1187,9 +1314,8 @@ Made with care by 404 for class VIII Fascinate.
             switchTab('gallery');
         }
 
-        // Run on load
         document.addEventListener('DOMContentLoaded', startApp);
 
     </script>
 </body>
-    </html>
+</html>
