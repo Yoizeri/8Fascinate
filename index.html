@@ -3,7 +3,7 @@
 <!--
 VIII Fascinate Class Website
 Creator: 404
-Version: 1.1.0 (Aesthetic & Performance Update)
+Version: 1.2.0 (Profile Customization & Admin Optimization Update)
 Created: 2026
 Class: VIII Fascinate 2026/2027
 
@@ -14,20 +14,20 @@ SETUP INSTRUCTIONS:
 
 LOGIN CREDENTIALS:
 MEMBER: Any username + password (first login sets the password)
-ADMIN: username = "NotHereKid", password = "Nope"
+ADMIN: username = "Nothing", password = "Nope"
 
 FEATURES:
 • Gallery (upload/view photos)
-• Profil (member directory)
+• Profil (member directory with custom avatars, bio, and medsos)
 • Prestasi (achievements)
 • Forum (class messages)
 • Pengaturan (settings) + CUSTOM AESTHETIC BACKGROUND
-• Admin Panel (for admin only)
+• Admin Panel (Full Data Moderation & Synchronization)
 
 DATA STORAGE: All data in browser LocalStorage
 PERFORMANCE: < 250ms load time, < 150KB file size, Auto Image Compress
 DESIGN: Nature aesthetic (green theme) with Glassmorphism
-SECURITY: SHA-256 password for admin & members, soft delete for safety
+SECURITY: SHA-256 password for admin & members, strict hard delete.
 Made with care by 404 for class VIII Fascinate.
 -->
 <head>
@@ -174,11 +174,11 @@ Made with care by 404 for class VIII Fascinate.
         
         /* Profil Tab */
         .search-bar { margin-bottom: 24px; position: relative; }
-        .member-avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--light); margin: 0 auto 16px; background: var(--sage); display: flex; align-items: center; justify-content: center; font-size: 36px; color: white; font-weight: bold; object-fit: cover; }
+        .member-avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--light); margin: 0 auto 16px; background: var(--sage); display: flex; align-items: center; justify-content: center; font-size: 36px; color: white; font-weight: bold; object-fit: cover; padding: 0; }
         .member-name { text-align: center; font-size: var(--font-lg); font-weight: bold; color: var(--primary); margin-bottom: 4px; }
         .member-phone { text-align: center; font-size: var(--font-base); color: var(--text-sec); margin-bottom: 8px; }
         .member-hobi { text-align: center; font-size: var(--font-sm); color: var(--sage); font-style: italic; }
-        .card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid var(--gray); padding-top: 12px; }
+        .card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 12px; }
         
         /* Prestasi Tab */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 32px; }
@@ -215,6 +215,7 @@ Made with care by 404 for class VIII Fascinate.
         th, td { padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: var(--font-base); }
         body.dark-mode th, body.dark-mode td { border-bottom: 1px solid rgba(255,255,255,0.1); }
         th { background: rgba(165,214,167,0.3); color: var(--primary); font-weight: bold; }
+        body.dark-mode th { background: rgba(165,214,167,0.15); color: var(--sage); } /* Fixed Dark Mode Contrast */
         .log-success { color: var(--light); font-weight: bold; }
         .log-failed { color: var(--danger); font-weight: bold; }
         
@@ -386,7 +387,6 @@ Made with care by 404 for class VIII Fascinate.
                         </select>
                     </div>
 
-                    <!-- NEW AESTHETIC BACKGROUND FEATURE -->
                     <div class="flex justify-between items-center mb-4">
                         <b>Latar Belakang</b>
                         <select id="bg-select" onchange="changeBgMode(this.value)" style="width:150px;">
@@ -398,7 +398,6 @@ Made with care by 404 for class VIII Fascinate.
                         </select>
                     </div>
                     <input type="file" id="custom-bg-upload" accept="image/jpeg, image/png, image/webp" class="hidden" onchange="handleBgUpload(event)">
-                    <!-- END BACKGROUND FEATURE -->
 
                     <hr style="border:0; border-top:1px solid rgba(0,0,0,0.1); margin: 16px 0;">
                     <div class="grid grid-2">
@@ -409,7 +408,7 @@ Made with care by 404 for class VIII Fascinate.
                     <hr style="border:0; border-top:1px solid rgba(0,0,0,0.1); margin: 16px 0;">
                     <button class="btn btn-danger w-full mb-4" onclick="clearMyData()">🗑️ Clear My Browser Data</button>
                     <div class="text-center" style="font-size:12px; color:var(--text-sec);">
-                        Made by: 404<br>Version: 1.1.0<br>Class 2026/2027
+                        Made by: 404<br>Version: 1.2.0<br>Class 2026/2027
                     </div>
                 </div>
             </div>
@@ -452,7 +451,7 @@ Made with care by 404 for class VIII Fascinate.
                 <div id="admin-users" class="admin-sub-content">
                     <div class="table-wrap">
                         <table id="admin-users-table">
-                            <thead><tr><th>Nama</th><th>Bergabung</th><th>Aksi</th></tr></thead>
+                            <thead><tr><th>Nama</th><th>Detail Info</th><th>Bergabung</th><th>Aksi</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -500,7 +499,7 @@ Made with care by 404 for class VIII Fascinate.
                         <hr style="margin:24px 0; border:0; border-top:1px solid rgba(0,0,0,0.1);">
                         <h3>System Info</h3>
                         <p style="font-size:14px; margin-top:8px;">
-                            Version: 1.1.0<br>Created: 2026<br>Storage Used: <span id="storage-usage">Calculating...</span>
+                            Version: 1.2.0<br>Created: 2026<br>Storage Used: <span id="storage-usage">Calculating...</span>
                         </p>
                     </div>
                 </div>
@@ -534,7 +533,7 @@ Made with care by 404 for class VIII Fascinate.
         </div>
     </div>
 
-    <!-- Form Member -->
+    <!-- Form Member (Admin/General Add) -->
     <div id="member-form-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-close" onclick="closeModal('member-form-modal')">✕</div>
@@ -543,6 +542,24 @@ Made with care by 404 for class VIII Fascinate.
             <input type="text" id="mf-phone" placeholder="Nomor Telepon (ex: +62...)" class="mb-2">
             <input type="text" id="mf-hobi" placeholder="Hobi (Opsional)" class="mb-4">
             <button class="btn btn-green w-full" onclick="saveMember()">Simpan</button>
+        </div>
+    </div>
+
+    <!-- Edit Profil Modal -->
+    <div id="edit-profile-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-close" onclick="closeModal('edit-profile-modal')">✕</div>
+            <h3 class="mb-4">Edit Profil Saya</h3>
+            <input type="hidden" id="ep-id">
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <img id="ep-preview" src="" style="width:80px;height:80px;border-radius:50%;object-fit:cover;background:rgba(0,0,0,0.1);border:2px solid var(--light);display:none;">
+                <div id="ep-initial" style="width:80px;height:80px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:32px;color:white;font-weight:bold;"></div>
+                <button class="btn btn-outline" onclick="document.getElementById('ep-photo').click()">Ganti Foto</button>
+                <input type="file" id="ep-photo" accept="image/jpeg, image/png, image/webp" class="hidden" onchange="handleProfilePhoto(event)">
+            </div>
+            <textarea id="ep-bio" placeholder="Bio singkat (Max 100 char)..." class="mb-2" rows="2" maxlength="100"></textarea>
+            <input type="text" id="ep-medsos" placeholder="Instagram / TikTok / Sosmed Lainnya" class="mb-4">
+            <button class="btn btn-green w-full" onclick="saveProfileEdit()">Simpan Profil</button>
         </div>
     </div>
 
@@ -630,11 +647,11 @@ Made with care by 404 for class VIII Fascinate.
         function initData() {
             if(!localStorage.getItem('class_members')) {
                 setStore('class_members', [
-                    {id: genUUID(), name: 'Andi Pratama', phone: '+628111222333', hobi: 'Membaca', photoURL: '', joinDate: '2026-07-15', status: 'active'},
-                    {id: genUUID(), name: 'Budi Santoso', phone: '+628222333444', hobi: 'Sepak Bola', photoURL: '', joinDate: '2026-07-15', status: 'active'},
-                    {id: genUUID(), name: 'Citra Kirana', phone: '+628333444555', hobi: 'Melukis', photoURL: '', joinDate: '2026-07-16', status: 'active'},
-                    {id: genUUID(), name: 'Dewi Lestari', phone: '+628444555666', hobi: 'Menulis', photoURL: '', joinDate: '2026-07-16', status: 'active'},
-                    {id: genUUID(), name: 'Eko Putra', phone: '+628555666777', hobi: 'Berenang', photoURL: '', joinDate: '2026-07-17', status: 'active'}
+                    {id: genUUID(), name: 'Andi Pratama', phone: '+628111222333', hobi: 'Membaca', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-15'},
+                    {id: genUUID(), name: 'Budi Santoso', phone: '+628222333444', hobi: 'Sepak Bola', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-15'},
+                    {id: genUUID(), name: 'Citra Kirana', phone: '+628333444555', hobi: 'Melukis', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-16'},
+                    {id: genUUID(), name: 'Dewi Lestari', phone: '+628444555666', hobi: 'Menulis', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-16'},
+                    {id: genUUID(), name: 'Eko Putra', phone: '+628555666777', hobi: 'Berenang', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-17'}
                 ]);
             }
             if(!localStorage.getItem('achievements')) {
@@ -648,7 +665,7 @@ Made with care by 404 for class VIII Fascinate.
             }
         }
 
-        // Apply preferences (Including New Aesthetic Background Logic)
+        // Apply preferences 
         function applyPreferences() {
             const prefs = JSON.parse(localStorage.getItem('user_preferences') || '{}');
             
@@ -667,11 +684,9 @@ Made with care by 404 for class VIII Fascinate.
             const bgMode = prefs.bgMode || 'default';
             if(document.getElementById('bg-select')) document.getElementById('bg-select').value = bgMode;
             
-            // Reset background inline styles first
             document.body.style.backgroundImage = '';
             document.body.style.backgroundColor = '';
 
-            // Apply chosen background
             if(bgMode === 'sunflower') {
                 document.body.style.backgroundImage = 'radial-gradient(circle at 80% 20%, #F9D423 0%, #FF4E50 80%, #5C258D 100%)';
             } else if(bgMode === 'grass') {
@@ -683,14 +698,14 @@ Made with care by 404 for class VIII Fascinate.
                 if(customData) {
                     document.body.style.backgroundImage = `url(${customData})`;
                 } else {
-                    document.body.style.backgroundImage = 'none'; // Fallback if no custom data
+                    document.body.style.backgroundImage = 'none'; 
                 }
             } else {
                 document.body.style.backgroundImage = 'none';
             }
         }
 
-        // Handle Custom Background Upload with Auto Resize & Compress
+        // Handle Background Upload 
         function handleBgUpload(e) {
             const file = e.target.files[0];
             if(!file) return;
@@ -702,8 +717,6 @@ Made with care by 404 for class VIII Fascinate.
                 img.onload = () => {
                     const cvs = document.createElement('canvas');
                     let w = img.width, h = img.height;
-                    
-                    // Max dimension 1280 to save space while looking great as background
                     const MAX = 1280; 
                     if(w > h && w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
                     else if (h > MAX) { w = Math.round((w * MAX) / h); h = MAX; }
@@ -711,9 +724,7 @@ Made with care by 404 for class VIII Fascinate.
                     cvs.width = w; cvs.height = h;
                     cvs.getContext('2d').drawImage(img, 0, 0, w, h);
                     
-                    // High compression WebP (0.5) for background
                     const dataURL = cvs.toDataURL('image/webp', 0.5);
-                    
                     try {
                         localStorage.setItem('custom_bg_data', dataURL);
                         let p = getStore('user_preferences');
@@ -728,13 +739,12 @@ Made with care by 404 for class VIII Fascinate.
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
-            e.target.value = ''; // Reset input
+            e.target.value = ''; 
         }
 
         function changeBgMode(mode) {
             let p = getStore('user_preferences');
             if (mode === 'custom') {
-                // Return select to previous value until a file is actually chosen
                 document.getElementById('bg-select').value = p.bgMode || 'default';
                 document.getElementById('custom-bg-upload').click();
                 return;
@@ -823,7 +833,6 @@ Made with care by 404 for class VIII Fascinate.
             window.location.reload();
         }
 
-        // Session timeout interval
         setInterval(() => {
             const sessStr = sessionStorage.getItem('session');
             if(!sessStr) return;
@@ -952,20 +961,98 @@ Made with care by 404 for class VIII Fascinate.
             showModal('lightbox-modal');
         }
 
-        // PROFIL
+        // PROFIL & USER CUSTOMIZATION
+        let tempProfilePic = '';
+        
+        function handleProfilePhoto(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            if(!file.type.match(/image\/(jpeg|png|webp)/)) return alert("Format gambar harus JPG, PNG, atau WebP.");
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const cvs = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    const MAX = 300; // Small size for profile pics to save memory
+                    if(w > h && w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
+                    else if (h > MAX) { w = Math.round((w * MAX) / h); h = MAX; }
+                    cvs.width = w; cvs.height = h;
+                    cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+                    
+                    tempProfilePic = cvs.toDataURL('image/webp', 0.7);
+                    
+                    document.getElementById('ep-preview').src = tempProfilePic;
+                    document.getElementById('ep-preview').style.display = 'block';
+                    document.getElementById('ep-initial').style.display = 'none';
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+            e.target.value = '';
+        }
+
+        function openEditProfile(id) {
+            const m = getStore('class_members').find(x => x.id === id);
+            if(!m) return;
+            document.getElementById('ep-id').value = m.id;
+            document.getElementById('ep-bio').value = m.bio || '';
+            document.getElementById('ep-medsos').value = m.medsos || '';
+            
+            tempProfilePic = m.photoURL || '';
+            if(tempProfilePic) {
+                document.getElementById('ep-preview').src = tempProfilePic;
+                document.getElementById('ep-preview').style.display = 'block';
+                document.getElementById('ep-initial').style.display = 'none';
+            } else {
+                document.getElementById('ep-initial').innerText = m.name.charAt(0).toUpperCase();
+                document.getElementById('ep-preview').style.display = 'none';
+                document.getElementById('ep-initial').style.display = 'flex';
+            }
+            showModal('edit-profile-modal');
+        }
+
+        function saveProfileEdit() {
+            const id = document.getElementById('ep-id').value;
+            const bio = document.getElementById('ep-bio').value.trim();
+            const medsos = document.getElementById('ep-medsos').value.trim();
+            
+            let members = getStore('class_members');
+            let idx = members.findIndex(x => x.id === id);
+            if(idx > -1) {
+                members[idx].bio = bio;
+                members[idx].medsos = medsos;
+                members[idx].photoURL = tempProfilePic;
+                setStore('class_members', members);
+                logAction('edit_profile', members[idx].name, 'updated profile info', 'success');
+                closeModal('edit-profile-modal');
+                renderMembers();
+                if(document.getElementById('admin-users-table')) renderAdminUsers();
+            }
+        }
+
         function renderMembers() {
             const q = document.getElementById('search-member').value.toLowerCase();
-            const members = getStore('class_members').filter(m => m.status === 'active' && m.name.toLowerCase().includes(q));
+            const members = getStore('class_members').filter(m => m.name.toLowerCase().includes(q)); // Fully synced array
             const session = JSON.parse(sessionStorage.getItem('session'));
             
             document.getElementById('members-container').innerHTML = members.map(m => {
                 const initial = escapeHTML(m.name).charAt(0).toUpperCase();
+                const isMe = session.username && m.name.toLowerCase() === session.username.toLowerCase();
+                
+                let avatarHTML = m.photoURL 
+                    ? `<img src="${m.photoURL}" class="member-avatar" style="padding:0; border:3px solid var(--light);">`
+                    : `<div class="member-avatar">${initial}</div>`;
+
                 return `
-                <div class="card flex" style="flex-direction:column;">
-                    <div class="member-avatar">${initial}</div>
+                <div class="card flex" style="flex-direction:column; position:relative;">
+                    ${isMe ? `<button class="btn-icon" style="position:absolute; top:8px; right:8px; color:var(--primary);" title="Edit Profil" onclick="openEditProfile('${m.id}')"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>` : ''}
+                    ${avatarHTML}
                     <div class="member-name">${escapeHTML(m.name)}</div>
-                    <div class="member-phone">${escapeHTML(m.phone)}</div>
-                    <div class="member-hobi">Hobi: ${escapeHTML(m.hobi || '-')}</div>
+                    <div class="member-phone">${escapeHTML(m.phone || '-')}</div>
+                    <div class="member-hobi" style="margin-bottom:4px;">Hobi: ${escapeHTML(m.hobi || '-')}</div>
+                    ${m.bio ? `<div style="font-size:12px; color:var(--text-sec); text-align:center; font-style:italic; margin-bottom:4px;">"${escapeHTML(m.bio)}"</div>` : ''}
+                    ${m.medsos ? `<div style="font-size:12px; color:var(--primary); text-align:center; font-weight:bold;">📱 ${escapeHTML(m.medsos)}</div>` : ''}
                     ${session.isAdmin ? `
                     <div class="card-actions">
                         <button class="btn-icon" style="color:var(--danger)" onclick="deleteMember('${m.id}')">
@@ -975,7 +1062,8 @@ Made with care by 404 for class VIII Fascinate.
                 </div>`
             }).join('');
             
-            document.getElementById('stat-members').innerText = getStore('class_members').filter(m=>m.status==='active').length;
+            const countEl = document.getElementById('stat-members');
+            if(countEl) countEl.innerText = getStore('class_members').length;
         }
 
         function saveMember() {
@@ -986,23 +1074,35 @@ Made with care by 404 for class VIII Fascinate.
             
             let members = getStore('class_members');
             const newId = genUUID();
-            members.push({ id: newId, name: n, phone: p, hobi: h, photoURL: '', joinDate: new Date().toISOString().split('T')[0], status: 'active' });
+            members.push({ id: newId, name: n, phone: p, hobi: h, bio: '', medsos: '', photoURL: '', joinDate: new Date().toISOString().split('T')[0] });
             setStore('class_members', members);
             logAction('add_member', newId, n, 'success');
             
             closeModal('member-form-modal');
             renderMembers();
+            if(document.getElementById('admin-users-table')) renderAdminUsers();
+            if(document.getElementById('admin-stat-members')) renderAdminDash();
         }
 
         function deleteMember(id) {
-            confirmAction("Hapus anggota ini?", () => {
+            confirmAction("Hapus anggota ini secara permanen?", () => {
                 let m = getStore('class_members');
                 let target = m.find(x => x.id === id);
                 if(target) {
-                    target.status = 'inactive';
+                    // Hard Delete removes member from array completely solving the count bug
+                    m = m.filter(x => x.id !== id);
                     setStore('class_members', m);
-                    logAction('delete_member', id, 'by admin', 'success');
+                    
+                    // Remove auth credentials as well so the user cannot log back in with that name
+                    let auth = getStore('member_auth');
+                    auth = auth.filter(a => a.username !== target.name.toLowerCase());
+                    setStore('member_auth', auth);
+
+                    logAction('delete_member', target.name, 'permanently deleted', 'success');
+                    
                     renderMembers();
+                    if(document.getElementById('admin-users-table')) renderAdminUsers();
+                    if(document.getElementById('admin-stat-members')) renderAdminDash();
                 }
             });
         }
@@ -1211,13 +1311,20 @@ Made with care by 404 for class VIII Fascinate.
             `).join('');
         }
 
+        // Updated Admin Users Table view
         function renderAdminUsers() {
             const m = getStore('class_members');
             document.querySelector('#admin-users-table tbody').innerHTML = m.map(x => `
                 <tr>
-                    <td>${escapeHTML(x.name)}<br><span style="font-size:10px;color:var(--sage)">${x.status}</span></td>
-                    <td>${x.joinDate}</td>
-                    <td>
+                    <td style="white-space:nowrap;"><strong>${escapeHTML(x.name)}</strong></td>
+                    <td style="font-size:12px; line-height:1.6;">
+                        📞 ${escapeHTML(x.phone || '-')}<br>
+                        🎨 ${escapeHTML(x.hobi || '-')}<br>
+                        📝 ${escapeHTML(x.bio || '-')}<br>
+                        📱 ${escapeHTML(x.medsos || '-')}
+                    </td>
+                    <td style="white-space:nowrap;">${x.joinDate}</td>
+                    <td style="white-space:nowrap;">
                         <button class="btn-icon" style="color:var(--gold); font-size:12px; font-weight:bold;" onclick="resetMemberPass('${escapeHTML(x.name)}')">Reset</button>
                         <button class="btn-icon" style="color:var(--danger); font-size:12px; font-weight:bold;" onclick="deleteMember('${x.id}')">Hapus</button>
                     </td>
