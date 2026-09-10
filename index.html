@@ -3,7 +3,7 @@
 <!--
 VIII Fascinate Class Website
 Creator: 404
-Version: 1.2.0 (Profile Customization & Admin Optimization Update)
+Version: 1.3.0 (Timezone Fix, Anti-Spam & Final Polish)
 Created: 2026
 Class: VIII Fascinate 2026/2027
 
@@ -14,7 +14,7 @@ SETUP INSTRUCTIONS:
 
 LOGIN CREDENTIALS:
 MEMBER: Any username + password (first login sets the password)
-ADMIN: username = "Nothing", password = "Nope"
+ADMIN: username = "admin", password = "AdminKelas8F2026!"
 
 FEATURES:
 • Gallery (upload/view photos)
@@ -197,7 +197,7 @@ Made with care by 404 for class VIII Fascinate.
         .forum-header { display: flex; justify-content: space-between; align-items: center; }
         .forum-sender { font-weight: bold; font-size: var(--font-base); color: var(--primary); }
         .forum-time { font-size: var(--font-sm); color: var(--sage); }
-        .forum-text { font-size: var(--font-base); color: var(--text-sec); white-space: pre-wrap; }
+        .forum-text { font-size: var(--font-base); color: var(--text-sec); white-space: pre-wrap; word-wrap: break-word;}
         .forum-actions { display: flex; justify-content: flex-end; gap: 16px; align-items: center; }
         
         /* Glass Input Area */
@@ -362,7 +362,7 @@ Made with care by 404 for class VIII Fascinate.
                 <div class="section-title"><h2>Forum Kelas</h2></div>
                 <div id="forum-container" style="min-height: 300px; padding-bottom: 20px;"></div>
                 <div class="forum-input-area">
-                    <textarea id="forum-input" placeholder="Tulis pesan..." rows="2" style="resize:none; flex:1;"></textarea>
+                    <textarea id="forum-input" placeholder="Tulis pesan... (Maksimal 500 huruf)" rows="2" style="resize:none; flex:1;" maxlength="500"></textarea>
                     <button class="btn btn-green" onclick="postMessage()" style="align-self: flex-end;">Post</button>
                 </div>
             </div>
@@ -389,13 +389,16 @@ Made with care by 404 for class VIII Fascinate.
 
                     <div class="flex justify-between items-center mb-4">
                         <b>Latar Belakang</b>
-                        <select id="bg-select" onchange="changeBgMode(this.value)" style="width:150px;">
-                            <option value="default">Default</option>
-                            <option value="sunflower">Bunga Matahari</option>
-                            <option value="grass">Rumput Hijau</option>
-                            <option value="sunrise">Sunrise</option>
-                            <option value="custom">Custom (Upload)</option>
-                        </select>
+                        <div class="flex items-center gap-2">
+                            <select id="bg-select" onchange="changeBgMode(this.value)" style="width:150px;">
+                                <option value="default">Default</option>
+                                <option value="sunflower">Bunga Matahari</option>
+                                <option value="grass">Rumput Hijau</option>
+                                <option value="sunrise">Sunrise</option>
+                                <option value="custom">Custom (Upload)</option>
+                            </select>
+                            <button class="btn-icon" style="color:var(--danger); background:rgba(211,47,47,0.1);" onclick="resetCustomBg()" title="Hapus Custom Foto">✕</button>
+                        </div>
                     </div>
                     <input type="file" id="custom-bg-upload" accept="image/jpeg, image/png, image/webp" class="hidden" onchange="handleBgUpload(event)">
 
@@ -408,7 +411,7 @@ Made with care by 404 for class VIII Fascinate.
                     <hr style="border:0; border-top:1px solid rgba(0,0,0,0.1); margin: 16px 0;">
                     <button class="btn btn-danger w-full mb-4" onclick="clearMyData()">🗑️ Clear My Browser Data</button>
                     <div class="text-center" style="font-size:12px; color:var(--text-sec);">
-                        Made by: 404<br>Version: 1.2.0<br>Class 2026/2027
+                        Made by: 404<br>Version: 1.3.0<br>Class 2026/2027
                     </div>
                 </div>
             </div>
@@ -499,7 +502,7 @@ Made with care by 404 for class VIII Fascinate.
                         <hr style="margin:24px 0; border:0; border-top:1px solid rgba(0,0,0,0.1);">
                         <h3>System Info</h3>
                         <p style="font-size:14px; margin-top:8px;">
-                            Version: 1.2.0<br>Created: 2026<br>Storage Used: <span id="storage-usage">Calculating...</span>
+                            Version: 1.3.0<br>Created: 2026<br>Storage Used: <span id="storage-usage">Calculating...</span>
                         </p>
                     </div>
                 </div>
@@ -592,6 +595,13 @@ Made with care by 404 for class VIII Fascinate.
             if(!str) return '';
             return String(str).replace(/[&<>'"]/g, t => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[t]));
         };
+        
+        // FIX: Timezone aware local time
+        const getLocalISO = () => {
+            const tzoffset = (new Date()).getTimezoneOffset() * 60000; 
+            return (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+        };
+
         const timeAgo = (ms) => {
             const diff = Math.floor((Date.now() - ms) / 1000);
             if (diff < 60) return `${diff}s ago`;
@@ -634,7 +644,7 @@ Made with care by 404 for class VIII Fascinate.
             const session = sessionStr ? JSON.parse(sessionStr) : {};
             logs.unshift({
                 id: genUUID(),
-                timestamp: new Date().toISOString().replace('T',' ').substr(0,19),
+                timestamp: getLocalISO().replace('T', ' ').substr(0, 19),
                 user: session.username || 'unknown',
                 action, target, detail, status
             });
@@ -646,18 +656,20 @@ Made with care by 404 for class VIII Fascinate.
         // --- 4. INITIALIZATION & DATA SEEDING ---
         function initData() {
             if(!localStorage.getItem('class_members')) {
+                const today = getLocalISO().split('T')[0];
                 setStore('class_members', [
-                    {id: genUUID(), name: 'Andi Pratama', phone: '+628111222333', hobi: 'Membaca', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-15'},
-                    {id: genUUID(), name: 'Budi Santoso', phone: '+628222333444', hobi: 'Sepak Bola', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-15'},
-                    {id: genUUID(), name: 'Citra Kirana', phone: '+628333444555', hobi: 'Melukis', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-16'},
-                    {id: genUUID(), name: 'Dewi Lestari', phone: '+628444555666', hobi: 'Menulis', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-16'},
-                    {id: genUUID(), name: 'Eko Putra', phone: '+628555666777', hobi: 'Berenang', bio: '', medsos: '', photoURL: '', joinDate: '2026-07-17'}
+                    {id: genUUID(), name: 'Andi Pratama', phone: '+628111222333', hobi: 'Membaca', bio: '', medsos: '', photoURL: '', joinDate: today},
+                    {id: genUUID(), name: 'Budi Santoso', phone: '+628222333444', hobi: 'Sepak Bola', bio: '', medsos: '', photoURL: '', joinDate: today},
+                    {id: genUUID(), name: 'Citra Kirana', phone: '+628333444555', hobi: 'Melukis', bio: '', medsos: '', photoURL: '', joinDate: today},
+                    {id: genUUID(), name: 'Dewi Lestari', phone: '+628444555666', hobi: 'Menulis', bio: '', medsos: '', photoURL: '', joinDate: today},
+                    {id: genUUID(), name: 'Eko Putra', phone: '+628555666777', hobi: 'Berenang', bio: '', medsos: '', photoURL: '', joinDate: today}
                 ]);
             }
             if(!localStorage.getItem('achievements')) {
+                const today = getLocalISO().split('T')[0];
                 setStore('achievements', [
-                    {id: genUUID(), title: 'Juara 1 Lomba Kebersihan', description: 'Tingkat sekolah tahun 2026', date: '2026-08-17', type: 'trophy', deleted: false},
-                    {id: genUUID(), title: 'Kelas Teraktif', description: 'Bulan September', date: '2026-09-01', type: 'star', deleted: false}
+                    {id: genUUID(), title: 'Juara 1 Lomba Kebersihan', description: 'Tingkat sekolah tahun 2026', date: today, type: 'trophy', deleted: false},
+                    {id: genUUID(), title: 'Kelas Teraktif', description: 'Bulan September', date: today, type: 'star', deleted: false}
                 ]);
             }
             if(!localStorage.getItem('user_preferences')) {
@@ -739,7 +751,7 @@ Made with care by 404 for class VIII Fascinate.
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
-            e.target.value = ''; 
+            e.target.value = ''; // FIX: Allow re-upload
         }
 
         function changeBgMode(mode) {
@@ -750,6 +762,14 @@ Made with care by 404 for class VIII Fascinate.
                 return;
             }
             p.bgMode = mode;
+            setStore('user_preferences', p);
+            applyPreferences();
+        }
+
+        function resetCustomBg() {
+            localStorage.removeItem('custom_bg_data');
+            let p = getStore('user_preferences');
+            p.bgMode = 'default';
             setStore('user_preferences', p);
             applyPreferences();
         }
@@ -907,7 +927,7 @@ Made with care by 404 for class VIII Fascinate.
                     const session = JSON.parse(sessionStorage.getItem('session'));
                     const pId = genUUID();
                     photos.push({
-                        id: pId, date: new Date().toISOString().split('T')[0],
+                        id: pId, date: getLocalISO().split('T')[0],
                         data: dataURL, uploader: session.username, deleted: false
                     });
                     setStore('gallery_photos', photos);
@@ -917,6 +937,7 @@ Made with care by 404 for class VIII Fascinate.
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
+            e.target.value = ''; // FIX: Allow re-upload
         }
 
         function renderGallery() {
@@ -974,7 +995,7 @@ Made with care by 404 for class VIII Fascinate.
                 img.onload = () => {
                     const cvs = document.createElement('canvas');
                     let w = img.width, h = img.height;
-                    const MAX = 300; // Small size for profile pics to save memory
+                    const MAX = 300; 
                     if(w > h && w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
                     else if (h > MAX) { w = Math.round((w * MAX) / h); h = MAX; }
                     cvs.width = w; cvs.height = h;
@@ -1033,7 +1054,7 @@ Made with care by 404 for class VIII Fascinate.
 
         function renderMembers() {
             const q = document.getElementById('search-member').value.toLowerCase();
-            const members = getStore('class_members').filter(m => m.name.toLowerCase().includes(q)); // Fully synced array
+            const members = getStore('class_members').filter(m => m.name.toLowerCase().includes(q)); 
             const session = JSON.parse(sessionStorage.getItem('session'));
             
             document.getElementById('members-container').innerHTML = members.map(m => {
@@ -1043,6 +1064,13 @@ Made with care by 404 for class VIII Fascinate.
                 let avatarHTML = m.photoURL 
                     ? `<img src="${m.photoURL}" class="member-avatar" style="padding:0; border:3px solid var(--light);">`
                     : `<div class="member-avatar">${initial}</div>`;
+                
+                // Medsos UI Polish
+                let medsosHTML = '';
+                if(m.medsos) {
+                    let text = escapeHTML(m.medsos);
+                    medsosHTML = `<div style="font-size:12px; color:var(--primary); background:rgba(255,255,255,0.4); padding:4px 8px; border-radius:12px; text-align:center; font-weight:bold; display:inline-block; align-self:center;">📱 ${text}</div>`;
+                }
 
                 return `
                 <div class="card flex" style="flex-direction:column; position:relative;">
@@ -1050,9 +1078,9 @@ Made with care by 404 for class VIII Fascinate.
                     ${avatarHTML}
                     <div class="member-name">${escapeHTML(m.name)}</div>
                     <div class="member-phone">${escapeHTML(m.phone || '-')}</div>
-                    <div class="member-hobi" style="margin-bottom:4px;">Hobi: ${escapeHTML(m.hobi || '-')}</div>
-                    ${m.bio ? `<div style="font-size:12px; color:var(--text-sec); text-align:center; font-style:italic; margin-bottom:4px;">"${escapeHTML(m.bio)}"</div>` : ''}
-                    ${m.medsos ? `<div style="font-size:12px; color:var(--primary); text-align:center; font-weight:bold;">📱 ${escapeHTML(m.medsos)}</div>` : ''}
+                    <div class="member-hobi" style="margin-bottom:8px;">Hobi: ${escapeHTML(m.hobi || '-')}</div>
+                    ${m.bio ? `<div style="font-size:12px; color:var(--text-sec); text-align:center; font-style:italic; margin-bottom:8px;">"${escapeHTML(m.bio)}"</div>` : ''}
+                    ${medsosHTML}
                     ${session.isAdmin ? `
                     <div class="card-actions">
                         <button class="btn-icon" style="color:var(--danger)" onclick="deleteMember('${m.id}')">
@@ -1074,7 +1102,7 @@ Made with care by 404 for class VIII Fascinate.
             
             let members = getStore('class_members');
             const newId = genUUID();
-            members.push({ id: newId, name: n, phone: p, hobi: h, bio: '', medsos: '', photoURL: '', joinDate: new Date().toISOString().split('T')[0] });
+            members.push({ id: newId, name: n, phone: p, hobi: h, bio: '', medsos: '', photoURL: '', joinDate: getLocalISO().split('T')[0] });
             setStore('class_members', members);
             logAction('add_member', newId, n, 'success');
             
@@ -1089,11 +1117,9 @@ Made with care by 404 for class VIII Fascinate.
                 let m = getStore('class_members');
                 let target = m.find(x => x.id === id);
                 if(target) {
-                    // Hard Delete removes member from array completely solving the count bug
                     m = m.filter(x => x.id !== id);
                     setStore('class_members', m);
                     
-                    // Remove auth credentials as well so the user cannot log back in with that name
                     let auth = getStore('member_auth');
                     auth = auth.filter(a => a.username !== target.name.toLowerCase());
                     setStore('member_auth', auth);
@@ -1199,8 +1225,10 @@ Made with care by 404 for class VIII Fascinate.
         function postMessage() {
             const t = document.getElementById('forum-input').value.trim();
             if(!t) return;
-            const session = JSON.parse(sessionStorage.getItem('session'));
+            // FIX: Anti spam limit
+            if(t.length > 500) return alert("Pesan terlalu panjang (Max 500 huruf).");
             
+            const session = JSON.parse(sessionStorage.getItem('session'));
             let m = getStore('forum_messages');
             const id = genUUID();
             m.push({ id, sender: session.username, message: t, timestamp: Date.now(), likes: 0, deleted: false });
@@ -1249,7 +1277,7 @@ Made with care by 404 for class VIII Fascinate.
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `8fascinate_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `8fascinate_backup_${getLocalISO().split('T')[0]}.json`;
             a.click();
             logAction('export_data', 'all', 'backup created', 'success');
         }
@@ -1271,6 +1299,7 @@ Made with care by 404 for class VIII Fascinate.
                 }
             };
             reader.readAsText(file);
+            e.target.value = ''; // FIX: Allow re-upload
         }
         function clearMyData() {
             confirmAction("Hapus preferensi lokal Anda? Ini tidak menghapus data kelas.", () => {
@@ -1311,7 +1340,6 @@ Made with care by 404 for class VIII Fascinate.
             `).join('');
         }
 
-        // Updated Admin Users Table view
         function renderAdminUsers() {
             const m = getStore('class_members');
             document.querySelector('#admin-users-table tbody').innerHTML = m.map(x => `
@@ -1350,7 +1378,7 @@ Made with care by 404 for class VIII Fascinate.
             const blob = new Blob([csv.join('\n')], {type: 'text/csv'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `audit_log_${new Date().toISOString().split('T')[0]}.csv`;
+            a.download = `audit_log_${getLocalISO().split('T')[0]}.csv`;
             a.click();
         }
 
