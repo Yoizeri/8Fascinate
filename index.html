@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-hashes' 'sha256-PLEASE+REPLACE+ME+WITH+REAL+SHA256+HASH+NOW=' https://cdn.jsdelivr.net; connect-src https://YOUR_PROJECT_ID.supabase.co wss://YOUR_PROJECT_ID.supabase.co; img-src 'self' data: blob: https://YOUR_PROJECT_ID.supabase.co; style-src 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-hashes' 'sha256-nlBIcv4R+rEPO/OzCfBZl7GOBRSXOu835za2GJh9fZs=' https://cdn.jsdelivr.net; connect-src zygwwnhvckbnltaaghxy.supabase.co wss://zygwwnhvckbnltaaghxy.supabase.co; img-src 'self' data: blob: zygwwnhvckbnltaaghxy.supabase.co; style-src 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'">
     <title>VIII Fascinate 2026/2027</title>
     <style>
         :root {
@@ -511,8 +511,8 @@
             return _sb;
         };
 
-        const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
+        const SUPABASE_URL = 'https://zygwwnhvckbnltaaghxy.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5Z3d3bmh2Y2tibmx0YWFnaHh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxNTgzODQsImV4cCI6MjEwNDczNDM4NH0.Le7L1nm_eI_TF6dkIrEf0V0xdDm7smWqJRxWL3EObPY';
 
         window.escapeHTML = (str) => {
             if(!str) return '';
@@ -527,6 +527,8 @@
             if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
             return `${Math.floor(diff/86400)}d ago`;
         };
+
+        window.showSuccess = (msg) => { console.log("Success: " + msg); };
 
         window.showError = (msg) => {
             console.error(msg);
