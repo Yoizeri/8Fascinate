@@ -940,6 +940,7 @@
                 const { error } = await (await getSupabase()).from('gallery').delete().eq('id', photoId);
                 if (error) return showError('Delete failed: ' + error.message);
                 await logAudit('delete_photo', `Deleted photo ID: ${photoId}`);
+                loadGallery();
             });
         };
 
@@ -1097,7 +1098,10 @@
         window.deleteMsg = (id) => {
             confirmAction("Hapus pesan ini?", async () => {
                 const { error } = await (await getSupabase()).from('forum_messages').delete().eq('id', id);
-                if (!error) await logAudit('delete_message', `Deleted msg ID: ${id}`);
+                if (!error) {
+                    await logAudit('delete_message', `Deleted msg ID: ${id}`);
+                    loadForum();
+                }
             });
         };
 
@@ -1255,6 +1259,7 @@
                 const { error } = await (await getSupabase()).from('members').delete().eq('id', id);
                 if (error) return showError('Delete failed: ' + error.message);
                 await logAudit('delete_member', `Permanently deleted member ID ${id}`);
+                loadMembers();
             });
         };
 
@@ -1431,7 +1436,10 @@
         window.deletePrestasi = (id) => {
             confirmAction("Hapus prestasi ini?", async () => {
                 const { error } = await (await getSupabase()).from('achievements').delete().eq('id', id);
-                if(!error) await logAudit('delete_achievement', `Deleted achievement ID ${id}`);
+                if(!error) {
+                    await logAudit('delete_achievement', `Deleted achievement ID ${id}`);
+                    loadAchievements();
+                }
             });
         };
 
