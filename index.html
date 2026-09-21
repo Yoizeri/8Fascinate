@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <!-- Fixed CSP to allow inline scripts to execute properly -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; connect-src https://YOUR_PROJECT_ID.supabase.co wss://YOUR_PROJECT_ID.supabase.co; img-src 'self' data: blob: https://YOUR_PROJECT_ID.supabase.co; style-src 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <!-- Fixed CSP to allow inline scripts to execute properly and connect to your specific Supabase project -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; connect-src https://zygwwnhvckbnltaaghxy.supabase.co wss://zygwwnhvckbnltaaghxy.supabase.co; img-src 'self' data: blob: https://zygwwnhvckbnltaaghxy.supabase.co; style-src 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'">
     <title>VIII Fascinate 2026/2027</title>
     <style>
         :root {
@@ -506,8 +506,8 @@
 
     <script type="module">
         // ✓ CONSTANTS DEFINED FIRST (before any function that uses them)
-        const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
+        const SUPABASE_URL = 'https://zygwwnhvckbnltaaghxy.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5Z3d3bmh2Y2tibmx0YWFnaHh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxNTgzODQsImV4cCI6MjEwNDczNDM4NH0.Le7L1nm_eI_TF6dkIrEf0V0xdDm7smWqJRxWL3EObPY';
 
         let _sb = null;
         const getSupabase = () => {
@@ -619,10 +619,11 @@
                 await logAudit('member_login', `Logged in successfully`);
                 return { success: true };
             } catch (error) {
+                console.error("SUPABASE ERROR:", error);
                 failedAttempts++;
                 if (failedAttempts >= 5) lockUntil = Date.now() + 15000;
                 const errEl = document.getElementById('member-error');
-                errEl.innerText = "Nama atau password salah.";
+                errEl.innerText = error.message || "Nama atau password salah.";
                 errEl.style.display = 'block';
                 return { success: false };
             }
@@ -641,7 +642,7 @@
                     document.getElementById('admin-error').style.display = 'block';
                     return { success: false };
                 }
-                if (username.toLowerCase() !== 'admin') throw new Error('Invalid');
+                if (username.toLowerCase() !== 'admin') throw new Error('Invalid username.');
                 
                 const client = await getSupabase();
                 const { data, error } = await client.auth.signInWithPassword({
@@ -652,7 +653,7 @@
                 const payload = JSON.parse(atob(data.session.access_token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
                 if (payload.app_metadata?.app_role !== 'admin') {
                     await client.auth.signOut();
-                    throw new Error('Invalid');
+                    throw new Error('You do not have admin privileges.');
                 }
                 
                 sessionStorage.setItem('isLoggedIn', 'true');
@@ -664,9 +665,10 @@
                 await logAudit('admin_login', 'Admin logged in successfully');
                 return { success: true };
             } catch (error) {
+                console.error("SUPABASE ADMIN ERROR:", error);
                 failedAttempts++;
                 if (failedAttempts >= 5) lockUntil = Date.now() + 15000;
-                document.getElementById('admin-error').innerText = 'Invalid admin credentials.';
+                document.getElementById('admin-error').innerText = error.message || 'Invalid admin credentials.';
                 document.getElementById('admin-error').style.display = 'block';
                 return { success: false };
             }
