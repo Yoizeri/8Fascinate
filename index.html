@@ -650,8 +650,8 @@
                 });
                 if (error) throw error;
                 
-                const payload = JSON.parse(atob(data.session.access_token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
-                if (payload.app_metadata?.app_role !== 'admin') {
+                // BYPASS CHECK: Checking email directly instead of looking for hidden admin role metadata
+                if (data.session.user.email !== 'admin@8fascinate.local') {
                     await client.auth.signOut();
                     throw new Error('You do not have admin privileges.');
                 }
