@@ -10,6 +10,7 @@
             --primary: #1E3D2B; --light: #4F7A55; --sage: #C2D3BC; --mint: #6E9B84;
             --bg: #F4F1E8; --surface: #FFFDF7; --forest: #1E3D2B; --forest-deep: #0F2418;
             --gold: #B98B2E; --gold-dark: #8F6A1E; --gold-ink: #8A6415;
+            --brown: #6B4A34; --blue: #87CEEB; --gray: #DEDBD1;
             --danger: #A6382F; --danger-bg: #F7E9E6;
             --line: rgba(30, 61, 43, .14); --line-2: rgba(30, 61, 43, .07);
             --line-strong: rgba(30, 61, 43, .24); --muted: #5D6B5F;
@@ -113,294 +114,27 @@
         @media (min-width: 480px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 768px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
 
-        /* ============================================================
-           LOGIN PAGE — SVG scene
-           ============================================================ */
-        #login-page {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            height: 100svh;
-            overflow: hidden;
-            background: #0d1a10;
-            cursor: pointer;
-            -webkit-user-select: none; user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            isolation: isolate;
-        }
-        #login-page.entered { cursor: default; }
-
-        .scene-camera {
-            position: absolute;
-            inset: 0;
-            transform-origin: 50% 34%;
-            transition:
-                transform 1700ms cubic-bezier(.55, 0, .25, 1),
-                filter 900ms cubic-bezier(.4, 0, .2, 1);
-            will-change: transform;
-        }
-        #login-page.zoomed .scene-camera {
-            transform: scale(7);
-            filter: blur(6px) brightness(1.05) saturate(1.15);
-        }
-
-        .scene-breathe {
-            position: absolute;
-            inset: 0;
-            animation: camera-breathe 14s ease-in-out infinite;
-        }
-        #login-page.entered .scene-breathe { animation: none; }
-        @keyframes camera-breathe {
-            0%, 100% { transform: scale(1); }
-            50%      { transform: scale(1.015); }
-        }
-
-        .scene-sky {
-            position: absolute; inset: 0;
-            background:
-                radial-gradient(ellipse 70% 55% at 78% 20%, rgba(255, 240, 200, 0.95), rgba(255, 220, 160, 0.4) 35%, transparent 68%),
-                linear-gradient(180deg,
-                    #f4dba9 0%,
-                    #ffd9a4 22%,
-                    #ecd3a0 42%,
-                    #cfd5ae 68%,
-                    #a7bc92 90%,
-                    #8ca97e 100%);
-        }
-
-        .scene-svg {
-            position: absolute; inset: 0;
-            width: 100%; height: 100%;
-            display: block;
-        }
-
-        /* SVG child animations */
-        .scene-svg .leaf-wrap {
-            transform-box: fill-box;
-            transform-origin: bottom center;
-            animation: leaf-sway var(--dur, 4s) ease-in-out infinite;
-            animation-delay: var(--delay, 0s);
-        }
-        @keyframes leaf-sway {
-            0%   { transform: rotate(-3.5deg); }
-            50%  { transform: rotate(3.5deg); }
-            100% { transform: rotate(-3.5deg); }
-        }
-
-        .scene-svg .blade-wrap {
-            transform-box: fill-box;
-            transform-origin: bottom center;
-            animation: blade-sway var(--dur, 3.5s) ease-in-out infinite;
-            animation-delay: var(--delay, 0s);
-        }
-        @keyframes blade-sway {
-            0%   { transform: rotate(-4.5deg); }
-            50%  { transform: rotate(4.5deg); }
-            100% { transform: rotate(-4.5deg); }
-        }
-
-        .scene-svg .flower-wrap {
-            transform-box: fill-box;
-            transform-origin: bottom center;
-            animation: flower-bob var(--dur, 5s) ease-in-out infinite;
-            animation-delay: var(--delay, 0s);
-        }
-        @keyframes flower-bob {
-            0%   { transform: rotate(-2.5deg); }
-            50%  { transform: rotate(2.8deg); }
-            100% { transform: rotate(-2.5deg); }
-        }
-
-        .scene-svg .mote {
-            animation: mote-rise var(--dur, 18s) linear infinite;
-            animation-delay: var(--delay, 0s);
-        }
-        @keyframes mote-rise {
-            0%   { transform: translateY(0); opacity: 0; }
-            12%  { opacity: var(--alpha, 0.4); }
-            88%  { opacity: var(--alpha, 0.4); }
-            100% { transform: translateY(-240px); opacity: 0; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .scene-svg .leaf-wrap,
-            .scene-svg .blade-wrap,
-            .scene-svg .flower-wrap,
-            .scene-svg .mote,
-            .scene-breathe,
-            #scene-title-text,
-            #scene-title-text .letter,
-            .scene-sub,
-            #scene-hint {
-                animation: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-            }
-        }
-
-        #scene-title {
-            position: absolute; inset: 0;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            pointer-events: none;
-            z-index: 3;
-            padding: 0 20px;
-            transition: opacity 500ms ease, transform 600ms ease;
-        }
-        #scene-title.gone { opacity: 0; transform: scale(1.08); }
-
-        #scene-title-text {
-            font-family: var(--serif);
-            font-weight: 600;
-            font-size: clamp(52px, 14vw, 180px);
-            line-height: .92;
-            letter-spacing: -.02em;
-            color: transparent;
-            -webkit-text-stroke: 1.6px rgba(255, 246, 226, 0.96);
-            text-shadow:
-                0 0 44px rgba(255, 224, 160, 0.45),
-                0 0 14px rgba(255, 240, 200, 0.3),
-                0 2px 6px rgba(15, 30, 18, 0.5);
-            text-align: center;
-            animation: titleFloat 6.5s ease-in-out 1.6s infinite;
-            will-change: transform;
-        }
-        @supports not (-webkit-text-stroke: 1px black) {
-            #scene-title-text { color: rgba(255,246,226,0.95); }
-        }
-        @keyframes titleFloat {
-            0%, 100% { transform: translateY(0); }
-            50%      { transform: translateY(-9px); }
-        }
-        #scene-title-text .letter {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(46px) rotate(-6deg);
-            animation: letterEnter 900ms cubic-bezier(.2,.9,.3,1) forwards;
-        }
-        @keyframes letterEnter {
-            0%   { opacity: 0; transform: translateY(46px) rotate(-6deg); }
-            60%  { opacity: 1; transform: translateY(-6px) rotate(1.5deg); }
-            100% { opacity: 1; transform: translateY(0) rotate(0); }
-        }
-        #scene-title-text .space { display: inline-block; width: .22em; }
-
-        .scene-sub {
-            margin-top: 22px;
-            font-family: var(--serif);
-            font-style: italic;
-            font-size: clamp(13px, 2.2vw, 18px);
-            letter-spacing: .12em;
-            color: rgba(255, 246, 226, 0.9);
-            text-shadow: 0 2px 8px rgba(15, 30, 18, 0.55);
-            opacity: 0;
-            animation: subEnter 1100ms ease 1.5s forwards;
-        }
-        @keyframes subEnter {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: .9; transform: translateY(0); }
-        }
-
-        #scene-hint {
-            position: absolute;
-            left: 50%; bottom: 5vh;
-            transform: translateX(-50%);
-            display: flex; align-items: center; gap: 10px;
-            font-family: var(--sans);
-            font-size: 11px;
-            letter-spacing: .3em;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: rgba(255, 246, 226, 0.92);
-            text-shadow: 0 2px 8px rgba(15, 30, 20, 0.75);
-            pointer-events: none;
-            z-index: 4;
-            opacity: 0;
-            animation: hintIn 900ms ease 2s forwards;
-            transition: opacity 400ms ease;
-        }
-        #scene-hint.gone { opacity: 0 !important; animation: none; }
-        @keyframes hintIn { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
-
-        .hint-dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            background: rgba(255, 246, 226, 0.95);
-            box-shadow: 0 0 0 0 rgba(255, 246, 226, 0.6);
-            animation: hintPulse 1.8s ease-out infinite;
-        }
-        @keyframes hintPulse {
-            0%   { box-shadow: 0 0 0 0 rgba(255, 246, 226, 0.55); }
-            70%  { box-shadow: 0 0 0 12px rgba(255, 246, 226, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 246, 226, 0); }
-        }
-
-        #login-panel {
-            position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            padding: 24px 18px;
-            z-index: 6;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 520ms ease 100ms;
-            overflow-y: auto;
-        }
-        #login-panel.visible { opacity: 1; pointer-events: auto; }
-
-        .login-card {
-            position: relative;
-            width: 100%;
-            max-width: 420px;
-            padding: 30px 28px 24px;
-            border-radius: 16px;
-            border-top: 3px solid var(--gold);
-            border-left: 1px solid rgba(255, 245, 220, 0.5);
-            border-right: 1px solid rgba(255, 245, 220, 0.5);
-            border-bottom: 1px solid rgba(255, 245, 220, 0.5);
-            background: rgba(251, 248, 240, 0.94);
-            backdrop-filter: blur(22px) saturate(1.25);
-            -webkit-backdrop-filter: blur(22px) saturate(1.25);
-            box-shadow:
-                0 30px 80px -30px rgba(8, 24, 14, 0.85),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            opacity: 0;
-            transform: scale(.86) translateY(28px);
-            transition: opacity 600ms cubic-bezier(.2,.9,.3,1), transform 700ms cubic-bezier(.2,.9,.3,1);
-        }
-        #login-panel.visible .login-card {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-        body.dark-mode .login-card {
-            background: rgba(19, 28, 22, 0.92);
-            border-color: rgba(255, 255, 255, 0.14);
-        }
-
-        .login-header { text-align: center; margin-bottom: 20px; }
-        .login-header h1 { font-family: var(--serif); font-size: 32px; line-height: 1; color: var(--forest); margin-bottom: 8px; }
+        #login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; position: relative; overflow: hidden; background: radial-gradient(900px 520px at 12% -10%, rgba(126, 178, 133, .30), transparent 62%), radial-gradient(700px 520px at 105% 110%, rgba(185, 139, 46, .18), transparent 62%), var(--forest-deep); }
+        .login-pattern { position: absolute; inset: 0; pointer-events: none; opacity: .07; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="%23FFFFFF" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/></svg>'); background-size: 72px; }
+        .login-card { position: relative; z-index: 1; width: 100%; max-width: 420px; padding: 34px 30px 28px; border-radius: 14px; border-top: 3px solid var(--gold); box-shadow: 0 30px 70px -34px rgba(0, 0, 0, .75); }
+        .login-header { text-align: center; margin-bottom: 26px; }
+        .login-header h1 { font-family: var(--serif); font-size: 40px; line-height: 1; color: var(--forest); margin-bottom: 10px; }
         body.dark-mode .login-header h1 { color: var(--text-main); }
-        .login-header p { font-size: 10px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
-
-        .login-tabs { display: flex; margin-bottom: 20px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: rgba(30, 61, 43, .03); }
+        .login-header p { font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+        .login-tabs { display: flex; margin-bottom: 24px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: rgba(30, 61, 43, .03); }
         body.dark-mode .login-tabs { background: rgba(255, 255, 255, .03); }
         .login-tab { flex: 1; min-width: 0; padding: 12px 8px; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-align: center; color: var(--muted); background: transparent; border-right: 1px solid var(--line); cursor: pointer; transition: background var(--trans), color var(--trans); user-select: none; }
         .login-tab:last-child { border-right: none; }
         .login-tab.active-member { background: var(--light); color: #fff; }
         .login-tab.active-admin { background: var(--gold); color: #231A05; }
-        .input-group { position: relative; margin-bottom: 12px; }
+        .input-group { position: relative; margin-bottom: 14px; }
         .input-group svg { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--muted); cursor: pointer; transition: color var(--trans); }
         .input-group svg:hover { color: var(--light); }
         .error-msg { display: none; margin-bottom: 12px; padding: 9px 12px; border-left: 3px solid var(--danger); background: var(--danger-bg); color: var(--danger); font-size: var(--font-sm); font-weight: 700; border-radius: 0 6px 6px 0; }
-        .disclaimer { margin-top: 20px; padding: 12px 14px; border-left: 3px solid var(--sage); background: rgba(30, 61, 43, .05); border-radius: 0 8px 8px 0; font-size: 11px; line-height: 1.6; color: var(--muted); }
+        .disclaimer { margin-top: 26px; padding: 14px 16px; border-left: 3px solid var(--sage); background: rgba(30, 61, 43, .04); border-radius: 0 8px 8px 0; font-size: 11px; line-height: 1.6; color: var(--muted); }
         body.dark-mode .disclaimer { background: rgba(255, 255, 255, .04); }
         .disclaimer b { display: block; margin-bottom: 4px; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; color: var(--text-sec); }
 
-        @media (max-width: 420px) {
-            .login-card { padding: 24px 20px 20px; }
-            .login-header h1 { font-size: 28px; }
-        }
-
-        /* ---------- dashboard ---------- */
         #main-app { min-height: 100vh; display: flex; flex-direction: column; }
         .header { position: sticky; top: 0; z-index: 100; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px; background: var(--forest); color: #F1F6EE; border-bottom: 2px solid var(--gold); box-shadow: 0 6px 22px -12px rgba(15, 36, 24, .8); }
         .header-title { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
@@ -478,6 +212,8 @@
         tbody tr:last-child td { border-bottom: none; }
         tbody tr:hover td { background: rgba(30, 61, 43, .025); }
         body.dark-mode tbody tr:hover td { background: rgba(255, 255, 255, .025); }
+        .log-success { color: var(--light); font-weight: 700; }
+        .log-failed { color: var(--danger); font-weight: 700; }
 
         .danger-zone { border: 1px solid var(--danger); border-radius: 8px; padding: 16px; margin-top: 16px; background: var(--danger-bg); }
         .danger-zone h4 { color: var(--danger); margin-bottom: 8px; font-family: var(--sans); font-size: 14px; }
@@ -522,73 +258,233 @@
             .header-title { font-size: 17px; }
             .header-title span { display: none; }
             .section-title h2 { font-size: 24px; }
+            .login-card { padding: 28px 22px 24px; }
+        }
+
+        /* =====================================================================
+           PART 1 — CSS BLOCK: NATURE PHYSICS LOGIN MINIGAME
+           ===================================================================== */
+
+        /* --- Canvas layer (behind the login card, above the pattern) --- */
+        #canvas-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            touch-action: none;               /* no pull-to-refresh / scroll / dbl-tap zoom */
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            overflow: hidden;
+            transition: opacity 520ms cubic-bezier(.4, 0, .2, 1);
+            will-change: opacity;
+        }
+        #canvas-container.dimmed { opacity: .26; }
+
+        #physics-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;               /* Safari fallback */
+            pointer-events: auto;
+        }
+
+        /* --- Instruction hint + skip escape hatch --- */
+        #game-hint {
+            position: absolute;
+            left: 50%;
+            bottom: max(20px, env(safe-area-inset-bottom, 0px));
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 90vw;
+            padding: 9px 10px 9px 18px;
+            border-radius: 999px;
+            background: rgba(10, 26, 17, .58);
+            border: 1px solid rgba(255, 255, 255, .16);
+            color: #EAF2E7;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .05em;
+            line-height: 1.3;
+            text-align: center;
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+            pointer-events: none;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            transition: opacity 360ms ease, transform 360ms cubic-bezier(.4, 0, .2, 1);
+            will-change: opacity, transform;
+        }
+        #game-hint b { color: #A8E67A; }
+        #game-hint.dismissed {
+            opacity: 0;
+            transform: translateX(-50%) translateY(14px);
+        }
+        #game-skip {
+            pointer-events: auto;
+            flex-shrink: 0;
+            padding: 6px 14px;
+            border: 1px solid rgba(255, 255, 255, .28);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .08);
+            color: #EAF2E7;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+        }
+        #game-skip:hover { background: rgba(255, 255, 255, .18); border-color: rgba(255, 255, 255, .45); }
+        #game-skip:active { transform: scale(.94); }
+
+        /* --- Interactive login card: hardware-accelerated reveal --- */
+        #interactive-login-card {
+            z-index: 5;
+            max-width: min(420px, 92vw);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(30px) scale(.95);
+            will-change: transform, opacity;
+            transition:
+                opacity 420ms cubic-bezier(.4, 0, .2, 1),
+                transform 420ms cubic-bezier(.22, .9, .3, 1),
+                visibility 0s linear 420ms;
+        }
+        #interactive-login-card.visible-card {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+            transition:
+                opacity 420ms cubic-bezier(.4, 0, .2, 1),
+                transform 420ms cubic-bezier(.22, .9, .3, 1),
+                visibility 0s linear 0s;
+        }
+        #interactive-login-card.hidden-card {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(30px) scale(.95);
+            transition:
+                opacity 420ms cubic-bezier(.4, 0, .2, 1),
+                transform 420ms cubic-bezier(.22, .9, .3, 1),
+                visibility 0s linear 420ms;
+        }
+
+        /* --- Back-to-tree button (top-left inside the card) --- */
+        #back-to-tree {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 6;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: 1px solid var(--line-strong);
+            border-radius: 50%;
+            background: rgba(30, 61, 43, .06);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: background 200ms ease, border-color 200ms ease, color 200ms ease, transform 200ms ease;
+            will-change: transform;
+        }
+        body.dark-mode #back-to-tree { background: rgba(255, 255, 255, .07); }
+        #back-to-tree:hover { background: var(--light); border-color: var(--light); color: #fff; }
+        #back-to-tree:active { transform: scale(.9); }
+        #back-to-tree svg { width: 19px; height: 19px; }
+
+        /* --- Narrow phone tuning --- */
+        @media (max-width: 420px) {
+            #interactive-login-card { max-width: 90vw; padding: 30px 20px 24px; }
+            .login-header h1 { font-size: 32px; }
+            #game-hint { font-size: 11px; padding: 8px 8px 8px 14px; gap: 8px; }
+        }
+        @media (max-width: 360px) {
+            .login-header h1 { font-size: 28px; }
+        }
+
+        /* --- Respect reduced-motion: keep the game, calm the reveals --- */
+        @media (prefers-reduced-motion: reduce) {
+            #interactive-login-card,
+            #interactive-login-card.visible-card,
+            #interactive-login-card.hidden-card {
+                transition-duration: 1ms !important;
+            }
         }
     </style>
 </head>
 <body>
     <div id="offline-bar">⚠️ Tidak ada koneksi internet</div>
 
-    <!-- LOGIN PAGE -->
+    <!-- =====================================================================
+         PART 2 — HTML MARKUP: NATURE PHYSICS LOGIN PAGE
+         ===================================================================== -->
     <div id="login-page">
-        <div class="scene-camera" id="scene-camera">
-            <div class="scene-breathe">
-                <div class="scene-sky"></div>
-                <svg class="scene-svg" id="scene-svg" viewBox="0 0 1000 1400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        <div class="login-pattern"></div>
+
+        <!-- Physics canvas layer -->
+        <div id="canvas-container">
+            <canvas id="physics-canvas"></canvas>
+        </div>
+
+        <!-- Instruction hint + skip escape hatch -->
+        <div id="game-hint">
+            <span>🍎 Tarik <b>apel hijau</b> ke dalam keranjang</span>
+            <button id="game-skip" type="button">Lewati</button>
+        </div>
+
+        <!-- Interactive login card (hidden until the green apple lands) -->
+        <div class="login-card hidden-card" id="interactive-login-card">
+            <button id="back-to-tree" type="button" aria-label="Kembali ke pohon" title="Kembali ke pohon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
+
+            <div class="login-header">
+                <h1>VIII Fascinate</h1>
+                <p>Class 2026 / 2027</p>
             </div>
-        </div>
 
-        <div id="scene-title">
-            <h1 id="scene-title-text" data-text="VIII Fascinate" aria-label="VIII Fascinate"></h1>
-            <p class="scene-sub">Class of 2026 / 2027</p>
-        </div>
+            <div class="login-tabs">
+                <div class="login-tab active-member" id="tab-member-login" onclick="toggleLoginMode('member')">Member Login</div>
+                <div class="login-tab" id="tab-admin-login" onclick="toggleLoginMode('admin')">Admin Login</div>
+            </div>
 
-        <div id="scene-hint">
-            <span class="hint-dot"></span>
-            <span>Tap anywhere to enter</span>
-        </div>
-
-        <div id="login-panel">
-            <div class="login-card">
-                <div class="login-header">
-                    <h1>Welcome in.</h1>
-                    <p>VIII Fascinate · 2026/2027</p>
-                </div>
-
-                <div class="login-tabs">
-                    <div class="login-tab active-member" id="tab-member-login" onclick="toggleLoginMode('member')">Member Login</div>
-                    <div class="login-tab" id="tab-admin-login" onclick="toggleLoginMode('admin')">Admin Login</div>
-                </div>
-
-                <form id="login-form" onsubmit="handleLogin(event)">
-                    <div id="member-fields">
-                        <div class="input-group">
-                            <input type="text" id="member-username" placeholder="Masukkan nama kamu..." autocomplete="off">
-                        </div>
-                        <div class="input-group">
-                            <input type="password" id="member-password" placeholder="Password (wajib)">
-                            <svg onclick="togglePassword('member-password')" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                        </div>
-                        <p class="error-msg" id="member-error">Invalid username or password. Try again.</p>
-                        <button type="submit" class="btn w-full btn-green" id="btn-login-member">Enter Fascinate</button>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div id="member-fields">
+                    <div class="input-group">
+                        <input type="text" id="member-username" placeholder="Masukkan nama kamu..." autocomplete="off">
                     </div>
-
-                    <div id="admin-fields" class="hidden">
-                        <div class="input-group">
-                            <input type="text" id="admin-username" placeholder="Username" autocomplete="off">
-                        </div>
-                        <div class="input-group">
-                            <input type="password" id="admin-password" placeholder="Password">
-                            <svg onclick="togglePassword('admin-password')" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                        </div>
-                        <p class="error-msg" id="admin-error">Invalid admin credentials. Try again.</p>
-                        <button type="submit" class="btn w-full btn-gold" id="btn-login-admin">Access Admin Panel</button>
+                    <div class="input-group">
+                        <input type="password" id="member-password" placeholder="Password (wajib)">
+                        <svg onclick="togglePassword('member-password')" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                     </div>
-                </form>
-
-                <div class="disclaimer">
-                    <b>Disclaimer</b>
-                    This is an educational project. Shared password for class members only. Do not use for sensitive data. Data is stored locally in your browser. Made by: 404
+                    <p class="error-msg" id="member-error">Invalid username or password. Try again.</p>
+                    <button type="submit" class="btn w-full btn-green" id="btn-login-member">Enter Fascinate</button>
                 </div>
+
+                <div id="admin-fields" class="hidden">
+                    <div class="input-group">
+                        <input type="text" id="admin-username" placeholder="Username" autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="admin-password" placeholder="Password">
+                        <svg onclick="togglePassword('admin-password')" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    </div>
+                    <p class="error-msg" id="admin-error">Invalid admin credentials. Try again.</p>
+                    <button type="submit" class="btn w-full btn-gold" id="btn-login-admin">Access Admin Panel</button>
+                </div>
+            </form>
+
+            <div class="disclaimer">
+                <b>Disclaimer</b>
+                This is an educational project. Shared password for class members only. Do not use for sensitive data. Data is stored locally in your browser. Made by: 404
             </div>
         </div>
     </div>
@@ -717,7 +613,7 @@
                     </div>
 
                     <div class="text-center mt-4" style="font-size:12px; color:var(--muted); line-height:1.8;">
-                        Made by: 404<br>Version: 2.4.0 (Living Scene Edition)<br>Class 2026/2027
+                        Made by: 404<br>Version: 2.1.0 (Fingerprint Edition)<br>Class 2026/2027
                     </div>
                 </div>
             </div>
@@ -735,19 +631,31 @@
 
                 <div id="admin-dash" class="admin-sub-content active">
                     <div class="stats-grid">
-                        <div class="stat-card"><div class="stat-val" id="admin-stat-members">0</div><div>Total Members</div></div>
-                        <div class="stat-card"><div class="stat-val" id="admin-stat-photos">0</div><div>Total Photos</div></div>
-                        <div class="stat-card"><div class="stat-val" id="admin-stat-posts">0</div><div>Total Posts</div></div>
+                        <div class="stat-card">
+                            <div class="stat-val" id="admin-stat-members">0</div><div>Total Members</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-val" id="admin-stat-photos">0</div><div>Total Photos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-val" id="admin-stat-posts">0</div><div>Total Posts</div>
+                        </div>
                     </div>
                     <h3 class="mb-2">Recent Activity</h3>
                     <div class="table-wrap mt-2">
-                        <table id="admin-recent-log"><thead><tr><th>Waktu</th><th>User</th><th>Aksi</th><th>Detail</th></tr></thead><tbody></tbody></table>
+                        <table id="admin-recent-log">
+                            <thead><tr><th>Waktu</th><th>User</th><th>Aksi</th><th>Detail</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
 
                 <div id="admin-users" class="admin-sub-content">
                     <div class="table-wrap">
-                        <table id="admin-users-table"><thead><tr><th>Nama</th><th>Detail Info</th><th>Bergabung</th><th>Aksi</th></tr></thead><tbody></tbody></table>
+                        <table id="admin-users-table">
+                            <thead><tr><th>Nama</th><th>Detail Info</th><th>Bergabung</th><th>Aksi</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -757,7 +665,10 @@
 
                 <div id="admin-log" class="admin-sub-content">
                     <div class="table-wrap">
-                        <table id="admin-full-log"><thead><tr><th>Waktu</th><th>User</th><th>Aksi</th><th>Detail</th></tr></thead><tbody></tbody></table>
+                        <table id="admin-full-log">
+                            <thead><tr><th>Waktu</th><th>User</th><th>Aksi</th><th>Detail</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -835,8 +746,9 @@
             return _sb;
         };
 
+        // FP: device fingerprint (cached per page-load)
         let _fp = null;
-        async function getFingerprint() {
+        const getFingerprint = async () => {
             if (_fp) return _fp;
             try {
                 const FingerprintJS = await import('https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4.0.0/dist/fingerprintjs.min.js');
@@ -849,7 +761,7 @@
                             .replace(/[^a-zA-Z0-9]/g, '').substring(0, 32);
             }
             return _fp;
-        }
+        };
 
         const debounce = (fn, ms) => {
             let t;
@@ -860,6 +772,7 @@
             if(!str) return '';
             return String(str).replace(/[&<>'"]/g, t => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[t]));
         };
+
         window.timeAgo = (isoStr) => {
             if(!isoStr) return '';
             const diff = Math.floor((Date.now() - new Date(isoStr).getTime()) / 1000);
@@ -868,10 +781,14 @@
             if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
             return `${Math.floor(diff/86400)}d ago`;
         };
+
         window.showError = (msg) => {
             console.error(msg);
-            if (msg && (msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network'))) alert("Koneksi bermasalah. Coba lagi.");
-            else alert("Terjadi kesalahan. Coba lagi.");
+            if (msg && (msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network'))) {
+                alert("Koneksi bermasalah. Coba lagi.");
+            } else {
+                alert("Terjadi kesalahan. Coba lagi.");
+            }
         };
 
         const getPrefs = () => JSON.parse(localStorage.getItem('user_preferences') || '{"darkMode":false, "fontSize":"normal", "bgMode":"default"}');
@@ -880,391 +797,22 @@
         const updateOnline = () => document.body.classList.toggle('offline', !navigator.onLine);
         window.addEventListener('online', updateOnline);
         window.addEventListener('offline', updateOnline);
+        document.addEventListener('DOMContentLoaded', updateOnline);
 
-        /* ============================================================
-           SVG SCENE — generated once, animated by CSS transforms
-           ============================================================ */
-        const SVGNS = 'http://www.w3.org/2000/svg';
-
-        // Deterministic RNG so the scene looks the same every load
-        function mulberry32(a) {
-            return function () {
-                a |= 0; a = a + 0x6D2B79F5 | 0;
-                let t = Math.imul(a ^ a >>> 15, 1 | a);
-                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-                return ((t ^ t >>> 14) >>> 0) / 4294967296;
-            };
-        }
-
-        function buildScene() {
-            const svg = document.getElementById('scene-svg');
-            if (!svg) return;
-            const rnd = mulberry32(0x8FACADE);
-            const rand = (a, b) => a + rnd() * (b - a);
-            const randi = (a, b) => Math.floor(rand(a, b + 1));
-
-            // Clear
-            while (svg.firstChild) svg.removeChild(svg.firstChild);
-
-            const mkEl = (tag, attrs) => {
-                const el = document.createElementNS(SVGNS, tag);
-                if (attrs) for (const k in attrs) el.setAttribute(k, attrs[k]);
-                return el;
-            };
-            const setStyle = (el, obj) => {
-                let s = '';
-                for (const k in obj) s += `${k}:${obj[k]};`;
-                el.setAttribute('style', s);
-            };
-
-            // --- Defs (shapes reused by <use>) ---
-            const defs = mkEl('defs');
-
-            // Leaf shape — a small elongated leaf, base at (0,0), tip at (0,-40)
-            const leafPath = mkEl('path', {
-                id: 'leaf-shape',
-                d: 'M 0 0 Q 9 -14 9 -22 Q 9 -32 0 -40 Q -9 -32 -9 -22 Q -9 -14 0 0 Z'
-            });
-            defs.appendChild(leafPath);
-
-            // Flower head — 5 petals + centre
-            const fh = mkEl('g', { id: 'flower-head' });
-            const petalAngles = [0, 72, 144, 216, 288];
-            for (const deg of petalAngles) {
-                const c = mkEl('ellipse', {
-                    cx: 0, cy: -3.2, rx: 2.6, ry: 4.2,
-                    transform: `rotate(${deg})`
-                });
-                c.setAttribute('fill', 'inherit');
-                fh.appendChild(c);
-            }
-            const fc = mkEl('circle', { r: 1.9 });
-            fc.setAttribute('fill', '#f0b030');
-            fh.appendChild(fc);
-            defs.appendChild(fh);
-
-            svg.appendChild(defs);
-
-            // --- Distant hills ---
-            // Three layered hills behind the tree
-            const hillLayer1 = mkEl('path', {
-                d: 'M -50 900 Q 150 780 350 820 Q 550 860 750 800 Q 900 760 1050 810 L 1050 1450 L -50 1450 Z'
-            });
-            hillLayer1.setAttribute('fill', '#c8d4b0');
-            hillLayer1.setAttribute('opacity', '0.85');
-            svg.appendChild(hillLayer1);
-
-            const hillLayer2 = mkEl('path', {
-                d: 'M -50 1000 Q 180 900 400 940 Q 620 980 850 920 Q 950 895 1050 930 L 1050 1450 L -50 1450 Z'
-            });
-            hillLayer2.setAttribute('fill', '#a8bfa0');
-            svg.appendChild(hillLayer2);
-
-            const hillLayer3 = mkEl('path', {
-                d: 'M -50 1110 Q 200 1020 430 1060 Q 640 1100 900 1030 L 1050 1050 L 1050 1450 L -50 1450 Z'
-            });
-            hillLayer3.setAttribute('fill', '#8aa47e');
-            svg.appendChild(hillLayer3);
-
-            // --- Distant tree line silhouette ---
-            const treeLine = mkEl('g', { opacity: '0.55' });
-            for (let i = 0; i < 60; i++) {
-                const x = -20 + i * 18 + rand(-4, 4);
-                const h = rand(35, 90);
-                const w = h * rand(0.5, 0.8);
-                const t = mkEl('path', {
-                    d: `M ${x - w * 0.5} 1150 Q ${x} ${1150 - h * 1.15} ${x} ${1150 - h} Q ${x} ${1150 - h * 1.15} ${x + w * 0.5} 1150 Z`
-                });
-                t.setAttribute('fill', '#5e7a56');
-                treeLine.appendChild(t);
-            }
-            svg.appendChild(treeLine);
-
-            // --- Main tree: trunk + branches (stroke-based) ---
-            const treeG = mkEl('g');
-            const branchColor = '#4a3324';
-
-            const strokes = [
-                { d: 'M 445 1400 Q 450 1200 452 1000 Q 454 900 455 830', w: 44 },
-                { d: 'M 452 900 Q 400 800 330 700', w: 26 },
-                { d: 'M 454 870 Q 470 740 480 640', w: 22 },
-                { d: 'M 453 900 Q 520 810 600 730', w: 26 },
-                { d: 'M 330 700 Q 290 640 240 590', w: 15 },
-                { d: 'M 330 700 Q 350 640 370 590', w: 13 },
-                { d: 'M 480 640 Q 470 570 460 510', w: 13 },
-                { d: 'M 480 640 Q 520 580 550 530', w: 13 },
-                { d: 'M 600 730 Q 650 680 700 640', w: 14 },
-                { d: 'M 600 730 Q 590 660 570 610', w: 12 },
-                { d: 'M 460 510 Q 450 460 445 420', w: 9 },
-                { d: 'M 460 510 Q 490 470 520 440', w: 9 },
-                { d: 'M 550 530 Q 590 490 630 460', w: 9 },
-                { d: 'M 370 590 Q 380 530 400 480', w: 9 },
-                { d: 'M 240 590 Q 220 540 210 490', w: 8 },
-                { d: 'M 570 610 Q 560 550 545 490', w: 8 }
-            ];
-
-            for (const s of strokes) {
-                const p = mkEl('path', {
-                    d: s.d,
-                    stroke: branchColor,
-                    'stroke-width': s.w,
-                    'stroke-linecap': 'round',
-                    fill: 'none'
-                });
-                treeG.appendChild(p);
-            }
-            svg.appendChild(treeG);
-
-            // --- Leaf clusters (the animated leaves) ---
-            // Each cluster is a seed position; leaves are scattered around it
-            const clusterSeeds = [
-                { x: 210, y: 490, n: 6, spread: 40 },
-                { x: 250, y: 590, n: 6, spread: 42 },
-                { x: 320, y: 660, n: 7, spread: 44 },
-                { x: 370, y: 590, n: 7, spread: 42 },
-                { x: 400, y: 480, n: 8, spread: 48 },
-                { x: 445, y: 420, n: 8, spread: 50 },
-                { x: 480, y: 480, n: 9, spread: 50 },
-                { x: 520, y: 440, n: 8, spread: 48 },
-                { x: 545, y: 530, n: 7, spread: 44 },
-                { x: 570, y: 610, n: 7, spread: 44 },
-                { x: 630, y: 460, n: 6, spread: 42 },
-                { x: 700, y: 640, n: 6, spread: 40 }
-            ];
-
-            const leafGroup = mkEl('g');
-            const leafColors = [
-                '#3d6b3d', '#4a7a44', '#587f4d', '#4d7b46',
-                '#3e7040', '#567b4a', '#629055', '#4b8250'
-            ];
-
-            for (const cl of clusterSeeds) {
-                for (let i = 0; i < cl.n; i++) {
-                    const lx = cl.x + rand(-cl.spread, cl.spread);
-                    const ly = cl.y + rand(-cl.spread, cl.spread);
-                    const rot = rand(-40, 40);
-                    const scale = rand(0.85, 1.25);
-                    const color = leafColors[randi(0, leafColors.length - 1)];
-                    const dur = rand(3.2, 5.2).toFixed(2) + 's';
-                    const delay = (-rand(0, 6)).toFixed(2) + 's';
-
-                    const outer = mkEl('g', {
-                        transform: `translate(${lx.toFixed(1)}, ${ly.toFixed(1)}) rotate(${rot.toFixed(1)}) scale(${scale.toFixed(2)})`
-                    });
-                    const wrap = mkEl('g', { class: 'leaf-wrap' });
-                    setStyle(wrap, { '--dur': dur, '--delay': delay });
-                    const use = mkEl('use', { href: '#leaf-shape' });
-                    use.setAttribute('fill', color);
-                    wrap.appendChild(use);
-                    outer.appendChild(wrap);
-                    leafGroup.appendChild(outer);
-                }
-            }
-            svg.appendChild(leafGroup);
-
-            // --- Grass layers (back / mid / front) ---
-            const grassGroup = mkEl('g');
-            const grassLayers = [
-                { y0: 1130, y1: 1220, count: 22, hMin: 40, hMax: 75, colors: ['#8fa878', '#9cb383', '#a5bc8a'], wMin: 1.4, wMax: 2.0 },
-                { y0: 1210, y1: 1300, count: 26, hMin: 55, hMax: 105, colors: ['#6d8f5e', '#7a9c68', '#86a872'], wMin: 1.8, wMax: 2.6 },
-                { y0: 1300, y1: 1420, count: 22, hMin: 75, hMax: 135, colors: ['#4d7040', '#5a7f4a', '#4a6f40'], wMin: 2.2, wMax: 3.2 }
-            ];
-
-            for (const layer of grassLayers) {
-                for (let i = 0; i < layer.count; i++) {
-                    const x = rand(-20, 1020);
-                    const y = rand(layer.y0, layer.y1);
-                    const h = rand(layer.hMin, layer.hMax);
-                    const w = rand(layer.wMin, layer.wMax);
-                    const bend = rand(-10, 10);
-                    const color = layer.colors[randi(0, layer.colors.length - 1)];
-                    const dur = rand(2.8, 4.5).toFixed(2) + 's';
-                    // Delay scales with x — creates a "wind travelling across" feel
-                    const delay = (-((x / 1000) * 2.2 + rand(0, 1.4))).toFixed(2) + 's';
-
-                    const outer = mkEl('g', { transform: `translate(${x.toFixed(1)}, ${y.toFixed(1)})` });
-                    const wrap = mkEl('g', { class: 'blade-wrap' });
-                    setStyle(wrap, { '--dur': dur, '--delay': delay });
-
-                    const blade = mkEl('path', {
-                        d: `M 0 0 Q ${(bend * 0.5).toFixed(1)} ${(-h * 0.5).toFixed(1)} ${bend.toFixed(1)} ${(-h).toFixed(1)}`,
-                        stroke: color,
-                        'stroke-width': w.toFixed(2),
-                        'stroke-linecap': 'round',
-                        fill: 'none'
-                    });
-                    wrap.appendChild(blade);
-                    outer.appendChild(wrap);
-                    grassGroup.appendChild(outer);
-                }
-            }
-            svg.appendChild(grassGroup);
-
-            // --- Flowers ---
-            const flowerGroup = mkEl('g');
-            const flowerColors = ['#e8a4b8', '#e0c860', '#d8d0c0', '#c9a6d4', '#e0b09a'];
-            const flowerSeeds = [
-                { x: 120, y: 1250 }, { x: 260, y: 1290 }, { x: 380, y: 1230 },
-                { x: 490, y: 1330 }, { x: 620, y: 1260 }, { x: 740, y: 1310 },
-                { x: 850, y: 1240 }, { x: 220, y: 1350 }, { x: 560, y: 1370 },
-                { x: 780, y: 1370 }
-            ];
-            for (const fs of flowerSeeds) {
-                const x = fs.x + rand(-15, 15);
-                const y = fs.y + rand(-10, 10);
-                const scale = rand(0.85, 1.35);
-                const color = flowerColors[randi(0, flowerColors.length - 1)];
-                const stemH = rand(38, 62);
-                const dur = rand(4.2, 6.0).toFixed(2) + 's';
-                const delay = (-rand(0, 5)).toFixed(2) + 's';
-
-                const outer = mkEl('g', { transform: `translate(${x.toFixed(1)}, ${y.toFixed(1)}) scale(${scale.toFixed(2)})` });
-                const wrap = mkEl('g', { class: 'flower-wrap' });
-                setStyle(wrap, { '--dur': dur, '--delay': delay });
-
-                const stem = mkEl('path', {
-                    d: `M 0 0 Q 1.5 ${(-stemH * 0.5).toFixed(1)} 0 ${(-stemH).toFixed(1)}`,
-                    stroke: '#4a6f40',
-                    'stroke-width': 1.4,
-                    'stroke-linecap': 'round',
-                    fill: 'none'
-                });
-                wrap.appendChild(stem);
-
-                const head = mkEl('use', {
-                    href: '#flower-head',
-                    transform: `translate(0, ${(-stemH).toFixed(1)})`
-                });
-                head.setAttribute('fill', color);
-                wrap.appendChild(head);
-
-                outer.appendChild(wrap);
-                flowerGroup.appendChild(outer);
-            }
-            svg.appendChild(flowerGroup);
-
-            // --- Ambient motes (dust particles) ---
-            const moteGroup = mkEl('g');
-            for (let i = 0; i < 14; i++) {
-                const x = rand(60, 940);
-                const y = rand(400, 1300);
-                const r = rand(1.2, 2.6);
-                const dur = rand(14, 24).toFixed(1) + 's';
-                const delay = (-rand(0, 18)).toFixed(1) + 's';
-                const alpha = rand(0.25, 0.6).toFixed(2);
-
-                const m = mkEl('circle', {
-                    class: 'mote',
-                    cx: x.toFixed(1),
-                    cy: y.toFixed(1),
-                    r: r.toFixed(2)
-                });
-                m.setAttribute('fill', '#fff8e0');
-                setStyle(m, { '--dur': dur, '--delay': delay, '--alpha': alpha });
-                m.style.opacity = '0';
-                moteGroup.appendChild(m);
-            }
-            svg.appendChild(moteGroup);
-        }
-
-        /* --- Compute transform-origin so the zoom lands on a specific leaf --- */
-        function computeZoomOrigin() {
-            const cam = document.getElementById('scene-camera');
-            if (!cam) return;
-            const rect = cam.getBoundingClientRect();
-            const vw = 1000, vh = 1400;
-            // Target leaf in viewBox coords — must sit inside the upper canopy
-            const leafX = 480, leafY = 500;
-            // preserveAspectRatio="xMidYMid slice": scale so BOTH dimensions cover
-            const scale = Math.max(rect.width / vw, rect.height / vh);
-            const offX = (rect.width - vw * scale) / 2;
-            const offY = (rect.height - vh * scale) / 2;
-            const screenX = offX + leafX * scale;
-            const screenY = offY + leafY * scale;
-            let pctX = (screenX / rect.width) * 100;
-            let pctY = (screenY / rect.height) * 100;
-            // Clamp into a sane range
-            pctX = Math.max(10, Math.min(90, pctX));
-            pctY = Math.max(10, Math.min(90, pctY));
-            cam.style.transformOrigin = `${pctX.toFixed(2)}% ${pctY.toFixed(2)}%`;
-        }
-
-        /* --- Login scene wiring --- */
-        function buildSceneTitle() {
-            const el = document.getElementById('scene-title-text');
-            if (!el) return;
-            const text = el.dataset.text || 'VIII Fascinate';
-            el.textContent = '';
-            let i = 0;
-            for (const ch of text) {
-                if (ch === ' ') {
-                    const sp = document.createElement('span');
-                    sp.className = 'space';
-                    el.appendChild(sp);
-                } else {
-                    const s = document.createElement('span');
-                    s.className = 'letter';
-                    s.textContent = ch;
-                    s.style.animationDelay = (200 + i * 70) + 'ms';
-                    el.appendChild(s);
-                    i++;
-                }
-            }
-        }
-
-        function setupLoginScene() {
-            const page = document.getElementById('login-page');
-            const panel = document.getElementById('login-panel');
-            const titleEl = document.getElementById('scene-title');
-            const hint = document.getElementById('scene-hint');
-            if (!page) return;
-
-            buildSceneTitle();
-            try { buildScene(); } catch (e) { console.warn('Scene build failed:', e); }
-            computeZoomOrigin();
-
-            // Recompute origin on orientation change / resize (only pre-entry)
-            let finished = false;
-            window.addEventListener('resize', () => { if (!finished) computeZoomOrigin(); });
-            window.addEventListener('orientationchange', () => { if (!finished) setTimeout(computeZoomOrigin, 200); });
-
-            function trigger() {
-                if (finished) return;
-                finished = true;
-                page.classList.add('entered');
-                titleEl.classList.add('gone');
-                hint.classList.add('gone');
-                // Slight delay so the leaf zoom is felt before the card arrives
-                setTimeout(() => page.classList.add('zoomed'), 40);
-                setTimeout(() => panel.classList.add('visible'), 1150);
-                setTimeout(() => panel.classList.add('visible'), 2400); // hard safety
-            }
-
-            page.addEventListener('pointerdown', (e) => {
-                if (e.target.closest('#login-panel')) return;
-                trigger();
-            }, { passive: true });
-
-            document.addEventListener('keydown', (e) => {
-                if (finished) return;
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    trigger();
-                }
-            });
-        }
-
-        /* ============================================================
-           MAIN APP LOGIC — unchanged from before
-           ============================================================ */
         async function logAudit(action, details) {
             try {
                 const username = sessionStorage.getItem('username') || 'unknown';
                 await (await getSupabase()).rpc('log_audit', {
-                    p_action: action, p_details: details, p_executed_by: username
+                    p_action: action,
+                    p_details: details,
+                    p_executed_by: username
                 });
-                if (sessionStorage.getItem('isAdmin') === 'true') loadAuditLogs();
-            } catch (error) { console.warn('Audit log skipped:', error?.message || error); }
+                if (sessionStorage.getItem('isAdmin') === 'true') {
+                    loadAuditLogs();
+                }
+            } catch (error) {
+                console.warn('Audit log skipped:', error?.message || error);
+            }
         }
 
         let currentLoginMode = 'member';
@@ -1293,7 +841,7 @@
                 return { success: false };
             }
             try {
-                if (!username || !password) {
+                if(!username || !password) {
                     const errEl = document.getElementById('member-error');
                     errEl.innerText = "Username dan Password wajib diisi.";
                     errEl.style.display = 'block';
@@ -1304,21 +852,32 @@
                 let { error: authError } = await client.auth.signInWithPassword({ email, password });
 
                 if (authError && authError.message.includes('Invalid login')) {
+                    // Self-signup flow: no whitelist. Device fingerprint enforces 1-account-per-device.
                     const fingerprint = await getFingerprint();
+
                     const { error: signUpError } = await client.auth.signUp({ email, password });
                     if (signUpError) throw signUpError;
 
                     const { error: memberError } = await client.rpc('handle_new_member', {
-                        p_name: username, p_fingerprint: fingerprint
+                        p_name: username,
+                        p_fingerprint: fingerprint
                     });
+
                     if (memberError) {
                         await client.auth.signOut();
                         const msg = memberError.message || '';
-                        if (msg.includes('DEVICE_TAKEN:')) throw new Error(msg.replace('DEVICE_TAKEN:', '').trim());
-                        if (msg.includes('NAME_TOO_SHORT:')) throw new Error('Nama minimal 2 karakter.');
-                        if (msg.includes('INVALID_FINGERPRINT:')) throw new Error('Tidak dapat memverifikasi perangkat Anda. Coba lagi.');
+                        if (msg.includes('DEVICE_TAKEN:')) {
+                            throw new Error(msg.replace('DEVICE_TAKEN:', '').trim());
+                        }
+                        if (msg.includes('NAME_TOO_SHORT:')) {
+                            throw new Error('Nama minimal 2 karakter.');
+                        }
+                        if (msg.includes('INVALID_FINGERPRINT:')) {
+                            throw new Error('Tidak dapat memverifikasi perangkat Anda. Coba lagi.');
+                        }
                         throw new Error(msg || 'Gagal membuat akun.');
                     }
+
                 } else if (authError) {
                     throw authError;
                 }
@@ -1338,8 +897,10 @@
                 sessionStorage.setItem('username', displayName || username);
                 sessionStorage.setItem('memberId', user.user.id);
 
-                failedAttempts = 0; lockUntil = 0;
+                failedAttempts = 0;
+                lockUntil = 0;
                 sessionStorage.setItem('isLoggedIn', 'true');
+
                 await logAudit('member_login', `Logged in successfully`);
                 return { success: true };
             } catch (error) {
@@ -1361,7 +922,7 @@
                 return { success: false };
             }
             try {
-                if (!username || !password) {
+                if(!username || !password) {
                     document.getElementById('admin-error').innerText = 'Username dan Password wajib diisi.';
                     document.getElementById('admin-error').style.display = 'block';
                     return { success: false };
@@ -1369,8 +930,11 @@
                 if (username.toLowerCase() !== 'admin') throw new Error('Invalid username.');
 
                 const client = await getSupabase();
-                const { data, error } = await client.auth.signInWithPassword({ email: 'admin@8fascinate.local', password });
+                const { data, error } = await client.auth.signInWithPassword({
+                    email: 'admin@8fascinate.local', password
+                });
                 if (error) throw error;
+
                 if (data.session.user.email !== 'admin@8fascinate.local') {
                     await client.auth.signOut();
                     throw new Error('You do not have admin privileges.');
@@ -1379,12 +943,16 @@
                 sessionStorage.setItem('isLoggedIn', 'true');
                 sessionStorage.setItem('isAdmin', 'true');
                 sessionStorage.setItem('username', 'admin');
-                failedAttempts = 0; lockUntil = 0;
+                failedAttempts = 0;
+                lockUntil = 0;
 
+                // FP: register this device as admin-exempt from 1-device-1-account
                 try {
                     const fingerprint = await getFingerprint();
                     await client.rpc('register_admin_device', { p_fingerprint: fingerprint });
-                } catch (e) { console.warn('Admin device registration failed:', e); }
+                } catch (e) {
+                    console.warn('Admin device registration failed:', e);
+                }
 
                 await logAudit('admin_login', 'Admin logged in successfully');
                 return { success: true };
@@ -1402,6 +970,7 @@
             e.preventDefault();
             const isAdmin = currentLoginMode === 'admin';
             let result;
+
             if (isAdmin) {
                 const u = document.getElementById('admin-username').value.trim();
                 const p = document.getElementById('admin-password').value;
@@ -1411,7 +980,10 @@
                 const p = document.getElementById('member-password').value;
                 result = await memberLogin(u, p);
             }
-            if (result.success) startApp();
+
+            if (result.success) {
+                startApp();
+            }
         };
 
         window.logout = async () => {
@@ -1423,26 +995,35 @@
         };
 
         let subscriptions = { gallery: null, forum: null, members: null, achievements: null };
+
         async function subscribeToGallery() {
             if (subscriptions.gallery) subscriptions.gallery.unsubscribe();
             subscriptions.gallery = (await getSupabase()).channel('gallery-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => loadGallery()).subscribe();
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => loadGallery())
+                .subscribe();
         }
+
         async function subscribeToForum() {
             if (subscriptions.forum) subscriptions.forum.unsubscribe();
             subscriptions.forum = (await getSupabase()).channel('forum-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'forum_messages' }, () => loadForum()).subscribe();
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'forum_messages' }, () => loadForum())
+                .subscribe();
         }
+
         async function subscribeToMembers() {
             if (subscriptions.members) subscriptions.members.unsubscribe();
             subscriptions.members = (await getSupabase()).channel('members-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => loadMembers()).subscribe();
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => loadMembers())
+                .subscribe();
         }
+
         async function subscribeToAchievements() {
             if (subscriptions.achievements) subscriptions.achievements.unsubscribe();
             subscriptions.achievements = (await getSupabase()).channel('achievements-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'achievements' }, () => loadAchievements()).subscribe();
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'achievements' }, () => loadAchievements())
+                .subscribe();
         }
+
         function cleanupSubscriptions() {
             Object.keys(subscriptions).forEach(key => {
                 if (subscriptions[key]) subscriptions[key].unsubscribe();
@@ -1454,7 +1035,9 @@
             document.querySelector(`.nav-item[data-tab="${tabId}"]`).classList.add('active');
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
+
             cleanupSubscriptions();
+
             if(tabId === 'gallery') { loadGallery(); subscribeToGallery(); }
             if(tabId === 'profil') { loadMembers(); subscribeToMembers(); }
             if(tabId === 'prestasi') { loadAchievements(); subscribeToAchievements(); }
@@ -1473,6 +1056,7 @@
 
         window.showModal = (id) => { document.getElementById(id).style.display = 'flex'; };
         window.closeModal = (id) => { document.getElementById(id).style.display = 'none'; };
+
         window.confirmAction = (msg, action) => {
             document.getElementById('confirm-text').innerText = msg;
             const btn = document.getElementById('confirm-btn');
@@ -1486,29 +1070,39 @@
                     const client = await getSupabase();
                     const { data: { user } } = await client.auth.getUser();
                     if (!user) return;
+
                     await client.rpc('delete_user');
+
                     sessionStorage.clear();
                     alert("Akun berhasil dihapus. Anda dapat mendaftar lagi dengan nama yang sama.");
                     window.location.reload();
-                } catch (error) { showError("Gagal menghapus akun: " + error.message); }
+                } catch (error) {
+                    showError("Gagal menghapus akun: " + error.message);
+                }
             });
         };
 
         window.loadGallery = async () => {
             try {
                 const { data: photos, error } = await (await getSupabase())
-                    .from('gallery').select('id, title, photo_url, uploader_id, description, created_at')
-                    .order('created_at', { ascending: false }).limit(50);
+                    .from('gallery')
+                    .select('id, title, photo_url, uploader_id, description, created_at')
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+
                 if (error) throw error;
                 displayGallery(photos);
-            } catch (error) { console.error('Gallery load error:', error); }
+            } catch (error) {
+                console.error('Gallery load error:', error);
+            }
         };
 
         function displayGallery(photos) {
             const c = document.getElementById('gallery-container');
             const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
             const fragment = document.createDocumentFragment();
-            if (!photos || photos.length === 0) {
+
+            if(!photos || photos.length === 0) {
                 const p = document.createElement('p');
                 p.className = 'card';
                 p.textContent = "Belum ada foto. Jadilah yang pertama upload!";
@@ -1516,27 +1110,41 @@
                 c.replaceChildren(fragment);
                 return;
             }
+
             photos.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'photo-card';
                 card.addEventListener('click', () => openLightbox(p.photo_url));
+
                 const img = document.createElement('img');
-                img.src = p.photo_url; img.loading = 'lazy'; img.decoding = 'async';
+                img.src = p.photo_url;
+                img.loading = 'lazy';
+                img.decoding = 'async';
+
                 const overlay = document.createElement('div');
                 overlay.className = 'photo-overlay';
+
                 const dateDiv = document.createElement('div');
                 dateDiv.style.fontSize = '12px';
                 dateDiv.textContent = p.created_at.split('T')[0];
+
                 const uploaderDiv = document.createElement('div');
                 uploaderDiv.textContent = `Oleh: ${p.uploader_id}`;
-                overlay.appendChild(dateDiv); overlay.appendChild(uploaderDiv);
-                card.appendChild(img); card.appendChild(overlay);
+
+                overlay.appendChild(dateDiv);
+                overlay.appendChild(uploaderDiv);
+                card.appendChild(img);
+                card.appendChild(overlay);
+
                 if (isAdmin) {
                     const btn = document.createElement('button');
                     btn.className = 'photo-del-btn';
                     btn.style.display = 'flex';
                     btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/></svg>';
-                    btn.addEventListener('click', (event) => { event.stopPropagation(); deletePhoto(p.id); });
+                    btn.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        deletePhoto(p.id);
+                    });
                     card.appendChild(btn);
                 }
                 fragment.appendChild(card);
@@ -1547,7 +1155,8 @@
         window.openLightbox = (src) => {
             if (!/^https:\/\/[a-z0-9.-]+\.supabase\.(co|in)\/storage\/v1\/object\/public\//.test(src) &&
                 !/^data:image\/(webp|png|jpeg);base64,/.test(src)) {
-                console.error('Invalid image URL'); return;
+                console.error('Invalid image URL');
+                return;
             }
             document.getElementById('lightbox-img').src = src;
             showModal('lightbox-modal');
@@ -1555,13 +1164,19 @@
 
         window.handlePhotoUpload = async (e) => {
             const file = e.target.files[0];
-            if (!file) return;
-            if (!file.type.match(/image\/(jpeg|png|webp)/)) return alert("Format harus JPG/PNG/WebP");
+            if(!file) return;
+            if(!file.type.match(/image\/(jpeg|png|webp)/)) return alert("Format harus JPG/PNG/WebP");
+
             let desc = prompt("Deskripsi foto (opsional):") || "Uploaded photo";
+
             try {
                 const result = await uploadPhoto(file, desc);
-                if (result.success) alert('Foto berhasil diupload!');
-            } catch (error) { showError(error.message); }
+                if (result.success) {
+                    alert('Foto berhasil diupload!');
+                }
+            } catch (error) {
+                showError(error.message);
+            }
             e.target.value = '';
         };
 
@@ -1594,23 +1209,39 @@
         async function uploadPhoto(file, description) {
             const canvas = await compressImageWebP(file, 800, 0.75);
             const blob = await canvasToBlob(canvas, 'image/webp');
+
             const filename = `photos/${Date.now()}-${file.name.replace(/[^a-z0-9.]/gi, '-').toLowerCase()}`;
-            const { error: uploadError } = await (await getSupabase()).storage
-                .from('8fascinate-gallery').upload(filename, blob, { cacheControl: '3600', upsert: false });
+            const { error: uploadError } = await (await getSupabase())
+                .storage
+                .from('8fascinate-gallery')
+                .upload(filename, blob, { cacheControl: '3600', upsert: false });
+
             if (uploadError) throw new Error('Upload failed: ' + uploadError.message);
+
             const { data: { publicUrl } } = (await getSupabase()).storage.from('8fascinate-gallery').getPublicUrl(filename);
+
             const { data: galleryItem, error: insertError } = await (await getSupabase())
                 .from('gallery')
-                .insert([{ title: description, photo_url: publicUrl, uploader_id: sessionStorage.getItem('username'), description }])
+                .insert([{
+                    title: description,
+                    photo_url: publicUrl,
+                    uploader_id: sessionStorage.getItem('username'),
+                    description: description
+                }])
                 .select().single();
+
             if (insertError) throw new Error('Database error: ' + insertError.message);
+
             await logAudit('upload_photo', `${filename} (${(blob.size / 1024).toFixed(2)}KB)`);
+
             return { success: true, photo: galleryItem };
         }
 
         window.deletePhoto = (photoId) => {
             confirmAction("Hapus foto ini permanen?", async () => {
-                if (sessionStorage.getItem('isAdmin') !== 'true') return showError('Admin access required');
+                if (sessionStorage.getItem('isAdmin') !== 'true') {
+                    return showError('Admin access required');
+                }
                 const { error } = await (await getSupabase()).from('gallery').delete().eq('id', photoId);
                 if (error) return showError('Delete failed: ' + error.message);
                 await logAudit('delete_photo', `Deleted photo ID: ${photoId}`);
@@ -1621,11 +1252,16 @@
         window.loadForum = async () => {
             try {
                 const { data: messages, error } = await (await getSupabase())
-                    .from('forum_messages').select('id, sender_name, content, is_anonymous, likes, created_at')
-                    .order('created_at', { ascending: true }).limit(100);
+                    .from('forum_messages')
+                    .select('id, sender_name, content, is_anonymous, likes, created_at')
+                    .order('created_at', { ascending: true })
+                    .limit(100);
+
                 if (error) throw error;
                 displayForum(messages);
-            } catch (error) { console.error('Forum load error:', error); }
+            } catch (error) {
+                console.error('Forum load error:', error);
+            }
         };
 
         function displayForum(msgs) {
@@ -1633,28 +1269,45 @@
             const currentUser = sessionStorage.getItem('username');
             const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
             const fragment = document.createDocumentFragment();
-            if (!msgs || msgs.length === 0) {
+
+            if(!msgs || msgs.length === 0) {
                 const p = document.createElement('p');
-                p.className = 'card'; p.textContent = 'Forum kosong.';
-                fragment.appendChild(p); c.replaceChildren(fragment); return;
+                p.className = 'card';
+                p.textContent = 'Forum kosong.';
+                fragment.appendChild(p);
+                c.replaceChildren(fragment);
+                return;
             }
+
             msgs.forEach(m => {
                 const isOwn = m.sender_name === currentUser;
                 const canDel = isOwn || isAdmin;
+
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `forum-msg card ${isOwn ? 'own' : ''}`.trim();
                 msgDiv.id = `msg-${m.id}`;
+
                 const header = document.createElement('div');
                 header.className = 'forum-header';
+
                 const sender = document.createElement('span');
-                sender.className = 'forum-sender'; sender.textContent = m.sender_name;
+                sender.className = 'forum-sender';
+                sender.textContent = m.sender_name;
+
                 const timeStr = document.createElement('span');
-                timeStr.className = 'forum-time'; timeStr.textContent = timeAgo(m.created_at);
-                header.appendChild(sender); header.appendChild(timeStr);
+                timeStr.className = 'forum-time';
+                timeStr.textContent = timeAgo(m.created_at);
+
+                header.appendChild(sender);
+                header.appendChild(timeStr);
+
                 const textDiv = document.createElement('div');
-                textDiv.className = 'forum-text'; textDiv.textContent = m.content;
+                textDiv.className = 'forum-text';
+                textDiv.textContent = m.content;
+
                 const actions = document.createElement('div');
                 actions.className = 'forum-actions';
+
                 const likeBtn = document.createElement('button');
                 likeBtn.className = 'btn-icon';
                 likeBtn.style.color = 'var(--danger)';
@@ -1665,6 +1318,7 @@
                 likeBtn.textContent = `❤️ ${m.likes || 0}`;
                 likeBtn.addEventListener('click', () => likeMsg(m.id));
                 actions.appendChild(likeBtn);
+
                 if (canDel) {
                     const delBtn = document.createElement('button');
                     delBtn.className = 'btn-icon';
@@ -1673,7 +1327,10 @@
                     delBtn.addEventListener('click', () => deleteMsg(m.id));
                     actions.appendChild(delBtn);
                 }
-                msgDiv.appendChild(header); msgDiv.appendChild(textDiv); msgDiv.appendChild(actions);
+
+                msgDiv.appendChild(header);
+                msgDiv.appendChild(textDiv);
+                msgDiv.appendChild(actions);
                 fragment.appendChild(msgDiv);
             });
             c.replaceChildren(fragment);
@@ -1693,65 +1350,99 @@
         window.postMessage = async () => {
             const inputEl = document.getElementById('forum-input');
             let message = inputEl.value.trim();
-            if (!message) return;
-            if (message.length > 500) return alert("Pesan terlalu panjang (Max 500 huruf).");
+            if(!message) return;
+            if(message.length > 500) return alert("Pesan terlalu panjang (Max 500 huruf).");
+
             const filteredMessage = filterBadWords(message);
             const sender = sessionStorage.getItem('username');
+
             const tempId = `temp-${Date.now()}`;
-            displayMessageOptimistic({ id: tempId, sender_name: sender, content: filteredMessage, created_at: new Date().toISOString(), likes: 0 });
+            displayMessageOptimistic({
+                id: tempId, sender_name: sender, content: filteredMessage,
+                created_at: new Date().toISOString(), likes: 0
+            });
             inputEl.value = '';
+
             try {
-                const { error } = await (await getSupabase()).from('forum_messages').insert([{ sender_name: sender, content: filteredMessage }]);
-                if (error) { document.getElementById(`msg-${tempId}`)?.remove(); throw error; }
+                const { error } = await (await getSupabase()).from('forum_messages')
+                    .insert([{ sender_name: sender, content: filteredMessage }]);
+
+                if (error) {
+                    document.getElementById(`msg-${tempId}`)?.remove();
+                    throw error;
+                }
                 await logAudit('post_message', `Message length: ${filteredMessage.length}`);
-            } catch (error) { showError('Failed to post message: ' + error.message); }
+            } catch (error) {
+                showError('Failed to post message: ' + error.message);
+            }
         };
 
         function displayMessageOptimistic(m) {
             const c = document.getElementById('forum-container');
             if (c.textContent.includes('Forum kosong')) c.replaceChildren();
+
             const wrapper = document.createElement('div');
             wrapper.className = 'forum-msg card own';
             wrapper.style.opacity = '0.7';
             wrapper.id = `msg-${m.id}`;
+
             const header = document.createElement('div');
             header.className = 'forum-header';
             const senderSpan = document.createElement('span');
-            senderSpan.className = 'forum-sender'; senderSpan.textContent = m.sender_name;
+            senderSpan.className = 'forum-sender';
+            senderSpan.textContent = m.sender_name;
             const timeSpan = document.createElement('span');
-            timeSpan.className = 'forum-time'; timeSpan.textContent = 'Sending...';
-            header.appendChild(senderSpan); header.appendChild(timeSpan);
+            timeSpan.className = 'forum-time';
+            timeSpan.textContent = 'Sending...';
+            header.appendChild(senderSpan);
+            header.appendChild(timeSpan);
+
             const textDiv = document.createElement('div');
-            textDiv.className = 'forum-text'; textDiv.textContent = m.content;
-            wrapper.appendChild(header); wrapper.appendChild(textDiv);
+            textDiv.className = 'forum-text';
+            textDiv.textContent = m.content;
+
+            wrapper.appendChild(header);
+            wrapper.appendChild(textDiv);
             c.appendChild(wrapper);
             c.scrollTop = c.scrollHeight;
         }
 
         window.likeMsg = async (id) => {
             const { data: curr } = await (await getSupabase()).from('forum_messages').select('likes').eq('id', id).single();
-            if (curr) await (await getSupabase()).from('forum_messages').update({ likes: curr.likes + 1 }).eq('id', id);
+            if(curr) {
+                await (await getSupabase()).from('forum_messages').update({ likes: curr.likes + 1 }).eq('id', id);
+            }
         };
 
         window.deleteMsg = (id) => {
             confirmAction("Hapus pesan ini?", async () => {
                 const { error } = await (await getSupabase()).from('forum_messages').delete().eq('id', id);
-                if (!error) { await logAudit('delete_message', `Deleted msg ID: ${id}`); loadForum(); }
+                if (!error) {
+                    await logAudit('delete_message', `Deleted msg ID: ${id}`);
+                    loadForum();
+                }
             });
         };
 
         window.loadMembers = async () => {
             try {
                 const { data: members, error } = await (await getSupabase())
-                    .from('members').select('*').order('created_at', { ascending: true });
+                    .from('members')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+
                 if (error) throw error;
+
                 window._cachedMembers = members;
                 displayMembers(members);
-                if (document.getElementById('admin-users-table')) displayAdminUsers(members);
+                if(document.getElementById('admin-users-table')) displayAdminUsers(members);
+
                 const countEl = document.getElementById('stat-members');
-                if (countEl) countEl.innerText = members.length;
-                if (document.getElementById('admin-stat-members')) document.getElementById('admin-stat-members').innerText = members.length;
-            } catch (error) { console.error('Members load error:', error); }
+                if(countEl) countEl.innerText = members.length;
+                if(document.getElementById('admin-stat-members')) document.getElementById('admin-stat-members').innerText = members.length;
+            } catch (error) {
+                console.error('Members load error:', error);
+            }
         };
 
         function displayMembers(membersList) {
@@ -1759,15 +1450,19 @@
             const members = membersList.filter(m => (m.name || '').toLowerCase().includes(q));
             const currentUser = sessionStorage.getItem('username');
             const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+
             const container = document.getElementById('members-container');
             const fragment = document.createDocumentFragment();
+
             members.forEach(m => {
                 const initial = m.name ? m.name.charAt(0).toUpperCase() : '?';
                 const isMe = currentUser && m.name.toLowerCase() === currentUser.toLowerCase();
+
                 const card = document.createElement('div');
                 card.className = 'card flex member-card-safe';
                 card.style.flexDirection = 'column';
                 card.style.position = 'relative';
+
                 if (isMe) {
                     const editBtn = document.createElement('button');
                     editBtn.className = 'btn-icon';
@@ -1780,6 +1475,7 @@
                     editBtn.addEventListener('click', () => openEditProfile(m.id));
                     card.appendChild(editBtn);
                 }
+
                 if (m.avatar_url) {
                     const img = document.createElement('img');
                     img.src = m.avatar_url;
@@ -1794,19 +1490,23 @@
                     div.textContent = initial;
                     card.appendChild(div);
                 }
+
                 const nameDiv = document.createElement('div');
                 nameDiv.className = 'member-name';
                 nameDiv.textContent = m.name;
                 card.appendChild(nameDiv);
+
                 const phoneDiv = document.createElement('div');
                 phoneDiv.className = 'member-phone';
                 phoneDiv.textContent = m.phone || '-';
                 card.appendChild(phoneDiv);
+
                 const hobiDiv = document.createElement('div');
                 hobiDiv.className = 'member-hobi';
                 hobiDiv.style.marginBottom = '8px';
                 hobiDiv.textContent = `Hobi: ${m.hobi || '-'}`;
                 card.appendChild(hobiDiv);
+
                 if (m.bio) {
                     const bioDiv = document.createElement('div');
                     bioDiv.style.fontSize = '12px';
@@ -1817,6 +1517,7 @@
                     bioDiv.textContent = `"${m.bio}"`;
                     card.appendChild(bioDiv);
                 }
+
                 if (m.medsos) {
                     const medsosDiv = document.createElement('div');
                     medsosDiv.style.fontSize = '11px';
@@ -1833,6 +1534,7 @@
                     medsosDiv.textContent = `📱 ${m.medsos}`;
                     card.appendChild(medsosDiv);
                 }
+
                 if (isAdmin) {
                     const actions = document.createElement('div');
                     actions.className = 'card-actions';
@@ -1844,6 +1546,7 @@
                     actions.appendChild(delBtn);
                     card.appendChild(actions);
                 }
+
                 fragment.appendChild(card);
             });
             container.replaceChildren(fragment);
@@ -1857,13 +1560,20 @@
             const name = document.getElementById('mf-name').value.trim();
             const phone = document.getElementById('mf-phone').value.trim();
             const hobi = document.getElementById('mf-hobi').value.trim();
+
             if (!name || !phone) return alert("Nama dan Telepon wajib diisi");
+
             try {
-                const { error } = await (await getSupabase()).from('members').insert([{ name, phone, hobi, role: 'member', is_claimed: false }]);
+                const { error } = await (await getSupabase()).from('members').insert([{
+                    name: name, phone: phone, hobi: hobi, role: 'member', is_claimed: false
+                }]);
+
                 if (error) throw error;
                 await logAudit('add_member', `Added member: ${name}`);
                 closeModal('member-form-modal');
-            } catch (error) { showError('Failed to add member: ' + error.message); }
+            } catch (error) {
+                showError('Failed to add member: ' + error.message);
+            }
         };
 
         window.deleteMember = (id) => {
@@ -1879,8 +1589,8 @@
         let tempProfilePicFile = null;
         window.handleProfilePhoto = (e) => {
             const file = e.target.files[0];
-            if (!file) return;
-            if (!file.type.match(/image\/(jpeg|png|webp)/)) return alert("Format gambar harus JPG, PNG, atau WebP.");
+            if(!file) return;
+            if(!file.type.match(/image\/(jpeg|png|webp)/)) return alert("Format gambar harus JPG, PNG, atau WebP.");
             tempProfilePicFile = file;
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -1893,12 +1603,13 @@
 
         window.openEditProfile = (id) => {
             const m = (window._cachedMembers || []).find(x => x.id === id);
-            if (!m) return;
+            if(!m) return;
             document.getElementById('ep-id').value = m.id;
             document.getElementById('ep-bio').value = m.bio || '';
             document.getElementById('ep-medsos').value = m.medsos || '';
             tempProfilePicFile = null;
-            if (m.avatar_url) {
+
+            if(m.avatar_url) {
                 document.getElementById('ep-preview').src = m.avatar_url;
                 document.getElementById('ep-preview').style.display = 'block';
                 document.getElementById('ep-initial').style.display = 'none';
@@ -1914,34 +1625,46 @@
             const id = document.getElementById('ep-id').value;
             const bio = document.getElementById('ep-bio').value.trim();
             const medsos = document.getElementById('ep-medsos').value.trim();
+
             try {
                 let avatar_url = null;
                 if (tempProfilePicFile) {
                     const canvas = await compressImageWebP(tempProfilePicFile, 300, 0.8);
                     const blob = await canvasToBlob(canvas, 'image/webp');
                     const filename = `avatars/${id}-${Date.now()}.webp`;
-                    const { error: uploadError } = await (await getSupabase()).storage.from('8fascinate-gallery').upload(filename, blob, { upsert: true });
+
+                    const { error: uploadError } = await (await getSupabase()).storage.from('8fascinate-gallery').upload(filename, blob, {upsert:true});
                     if (!uploadError) {
                         const { data: { publicUrl } } = (await getSupabase()).storage.from('8fascinate-gallery').getPublicUrl(filename);
                         avatar_url = publicUrl;
                     }
                 }
+
                 let updateData = { bio, medsos };
                 if (avatar_url) updateData.avatar_url = avatar_url;
+
                 const { error } = await (await getSupabase()).from('members').update(updateData).eq('id', id);
                 if (error) throw error;
+
                 await logAudit('edit_profile', `Updated profile info for ID ${id}`);
                 closeModal('edit-profile-modal');
-            } catch (error) { showError('Save profile failed: ' + error.message); }
+            } catch (error) {
+                showError('Save profile failed: ' + error.message);
+            }
         };
 
         window.loadAchievements = async () => {
             try {
                 const { data: achievements, error } = await (await getSupabase())
-                    .from('achievements').select('*').order('date', { ascending: false });
+                    .from('achievements')
+                    .select('*')
+                    .order('date', { ascending: false });
+
                 if (error) throw error;
                 displayAchievements(achievements);
-            } catch (error) { console.error('Achievements load error:', error); }
+            } catch (error) {
+                console.error('Achievements load error:', error);
+            }
         };
 
         const ICONS = {
@@ -1955,15 +1678,19 @@
             const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
             const container = document.getElementById('prestasi-container');
             const fragment = document.createDocumentFragment();
+
             ach.forEach(a => {
                 const item = document.createElement('div');
                 item.className = 'timeline-item card';
                 item.style.marginBottom = '16px';
+
                 const flexDiv = document.createElement('div');
                 flexDiv.style.display = 'flex';
                 flexDiv.style.justifyContent = 'space-between';
                 flexDiv.style.gap = '12px';
+
                 const leftDiv = document.createElement('div');
+
                 const titleDiv = document.createElement('div');
                 titleDiv.style.fontFamily = 'var(--serif)';
                 titleDiv.style.fontWeight = '600';
@@ -1972,13 +1699,16 @@
                 titleDiv.style.display = 'flex';
                 titleDiv.style.gap = '10px';
                 titleDiv.style.alignItems = 'center';
+
                 const iconSpan = document.createElement('span');
                 iconSpan.style.width = '18px';
                 iconSpan.style.flexShrink = '0';
                 iconSpan.style.color = 'var(--gold)';
                 iconSpan.innerHTML = ICONS[a.type] || ICONS['star'];
+
                 titleDiv.appendChild(iconSpan);
                 titleDiv.appendChild(document.createTextNode(a.title));
+
                 const dateDiv = document.createElement('div');
                 dateDiv.style.fontSize = '11px';
                 dateDiv.style.letterSpacing = '.08em';
@@ -1987,15 +1717,21 @@
                 dateDiv.style.color = 'var(--muted)';
                 dateDiv.style.margin = '6px 0';
                 dateDiv.textContent = a.date;
+
                 const descDiv = document.createElement('div');
                 descDiv.style.color = 'var(--text-sec)';
                 descDiv.textContent = a.description;
+
                 const badge = document.createElement('div');
                 badge.className = 'badge';
                 badge.textContent = a.type;
-                leftDiv.appendChild(titleDiv); leftDiv.appendChild(dateDiv);
-                leftDiv.appendChild(descDiv); leftDiv.appendChild(badge);
+
+                leftDiv.appendChild(titleDiv);
+                leftDiv.appendChild(dateDiv);
+                leftDiv.appendChild(descDiv);
+                leftDiv.appendChild(badge);
                 flexDiv.appendChild(leftDiv);
+
                 if (isAdmin) {
                     const delBtn = document.createElement('button');
                     delBtn.className = 'btn-icon';
@@ -2005,6 +1741,7 @@
                     delBtn.addEventListener('click', () => deletePrestasi(a.id));
                     flexDiv.appendChild(delBtn);
                 }
+
                 item.appendChild(flexDiv);
                 fragment.appendChild(item);
             });
@@ -2016,41 +1753,50 @@
             const d = document.getElementById('pf-desc').value;
             const dt = document.getElementById('pf-date').value;
             const ty = document.getElementById('pf-type').value;
-            if (!t || !dt) return alert("Judul dan tanggal wajib diisi");
+            if(!t || !dt) return alert("Judul dan tanggal wajib diisi");
+
             try {
                 const { error } = await (await getSupabase()).from('achievements').insert([{ title: t, description: d, date: dt, type: ty }]);
                 if (error) throw error;
                 await logAudit('add_achievement', `Added achievement: ${t}`);
                 closeModal('prestasi-form-modal');
-            } catch (error) { showError(error.message); }
+            } catch (error) {
+                showError(error.message);
+            }
         };
 
         window.deletePrestasi = (id) => {
             confirmAction("Hapus prestasi ini?", async () => {
                 const { error } = await (await getSupabase()).from('achievements').delete().eq('id', id);
-                if (!error) { await logAudit('delete_achievement', `Deleted achievement ID ${id}`); loadAchievements(); }
+                if(!error) {
+                    await logAudit('delete_achievement', `Deleted achievement ID ${id}`);
+                    loadAchievements();
+                }
             });
         };
 
         function applyPreferences() {
             const prefs = getPrefs();
             document.body.classList.toggle('dark-mode', !!prefs.darkMode);
-            if (document.getElementById('dark-mode-toggle')) document.getElementById('dark-mode-toggle').checked = !!prefs.darkMode;
-            if (prefs.fontSize) {
+            if(document.getElementById('dark-mode-toggle')) document.getElementById('dark-mode-toggle').checked = !!prefs.darkMode;
+
+            if(prefs.fontSize) {
                 document.body.className = document.body.className.replace(/font-\w+/,'').trim();
                 document.body.classList.add(`font-${prefs.fontSize}`);
-                if (document.getElementById('font-size-select')) document.getElementById('font-size-select').value = prefs.fontSize;
+                if(document.getElementById('font-size-select')) document.getElementById('font-size-select').value = prefs.fontSize;
             }
+
             const bgMode = prefs.bgMode || 'default';
-            if (document.getElementById('bg-select')) document.getElementById('bg-select').value = bgMode;
+            if(document.getElementById('bg-select')) document.getElementById('bg-select').value = bgMode;
             document.body.style.backgroundImage = '';
             document.body.style.backgroundColor = '';
-            if (bgMode === 'sunflower') document.body.style.backgroundImage = 'radial-gradient(circle at 80% 20%, #F9D423 0%, #FF4E50 80%, #5C258D 100%)';
-            else if (bgMode === 'grass') document.body.style.backgroundImage = 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)';
-            else if (bgMode === 'sunrise') document.body.style.backgroundImage = 'linear-gradient(to top, #ff0844 0%, #ffb199 100%)';
-            else if (bgMode === 'custom') {
+
+            if(bgMode === 'sunflower') document.body.style.backgroundImage = 'radial-gradient(circle at 80% 20%, #F9D423 0%, #FF4E50 80%, #5C258D 100%)';
+            else if(bgMode === 'grass') document.body.style.backgroundImage = 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)';
+            else if(bgMode === 'sunrise') document.body.style.backgroundImage = 'linear-gradient(to top, #ff0844 0%, #ffb199 100%)';
+            else if(bgMode === 'custom') {
                 const customData = localStorage.getItem('custom_bg_data');
-                if (customData) document.body.style.backgroundImage = `url(${customData})`;
+                if(customData) document.body.style.backgroundImage = `url(${customData})`;
             }
         }
 
@@ -2068,7 +1814,7 @@
 
         window.handleBgUpload = (e) => {
             const file = e.target.files[0];
-            if (!file) return;
+            if(!file) return;
             const reader = new FileReader();
             reader.onload = (event) => {
                 const img = new Image();
@@ -2076,14 +1822,17 @@
                     const cvs = document.createElement('canvas');
                     let w = img.width, h = img.height;
                     const MAX = 1280;
-                    if (w > h && w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
+                    if(w > h && w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
                     else if (h > MAX) { w = Math.round((w * MAX) / h); h = MAX; }
                     cvs.width = w; cvs.height = h;
                     cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+
                     try {
                         localStorage.setItem('custom_bg_data', cvs.toDataURL('image/webp', 0.5));
                         let p = getPrefs(); p.bgMode = 'custom'; setPrefs(p); applyPreferences();
-                    } catch (err) { alert("Gambar terlalu besar untuk lokal. Coba gambar yang lebih kecil."); }
+                    } catch(err) {
+                        alert("Gambar terlalu besar untuk lokal. Coba gambar yang lebih kecil.");
+                    }
                 };
                 img.src = event.target.result;
             };
@@ -2101,8 +1850,10 @@
                     (await getSupabase()).from('gallery').select('*', { count: 'exact', head: true }),
                     (await getSupabase()).from('forum_messages').select('*', { count: 'exact', head: true })
                 ]);
+
                 document.getElementById('admin-stat-photos').innerText = pCount || 0;
                 document.getElementById('admin-stat-posts').innerText = mCount || 0;
+
                 loadAuditLogs(10, 'admin-recent-log');
             } catch (err) { console.error(err); }
         }
@@ -2111,28 +1862,43 @@
             try {
                 if (sessionStorage.getItem('isAdmin') !== 'true') return;
                 const { data: logs, error } = await (await getSupabase())
-                    .from('audit_logs').select('*').order('created_at', { ascending: false }).limit(limit);
+                    .from('audit_logs')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(limit);
+
                 if (error) throw error;
                 displayAuditLogs(logs, targetTableId);
-            } catch (error) { console.error('Audit logs load error:', error); }
+            } catch (error) {
+                console.error('Audit logs load error:', error);
+            }
         }
 
         function displayAuditLogs(logs, targetTableId) {
             const tableBody = document.querySelector(`#${targetTableId} tbody`);
-            if (!tableBody) return;
+            if(!tableBody) return;
             const frag = document.createDocumentFragment();
             logs.forEach(l => {
                 const tr = document.createElement('tr');
                 const td1 = document.createElement('td');
-                td1.style.whiteSpace = 'nowrap'; td1.style.fontSize = '12px'; td1.style.color = 'var(--muted)';
+                td1.style.whiteSpace = 'nowrap';
+                td1.style.fontSize = '12px';
+                td1.style.color = 'var(--muted)';
                 td1.textContent = l.created_at.replace('T', ' ').substring(0, 19);
+
                 const td2 = document.createElement('td');
                 td2.textContent = l.executed_by || 'unknown';
+
                 const td3 = document.createElement('td');
                 td3.textContent = l.action;
+
                 const td4 = document.createElement('td');
                 td4.textContent = (l.details || '').substring(0, 40);
-                tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4);
+
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
                 frag.appendChild(tr);
             });
             tableBody.replaceChildren(frag);
@@ -2141,24 +1907,32 @@
         function displayAdminUsers(members) {
             const tbody = document.querySelector('#admin-users-table tbody');
             const frag = document.createDocumentFragment();
+
             members.forEach(x => {
                 const tr = document.createElement('tr');
+
                 const tdName = document.createElement('td');
                 tdName.style.whiteSpace = 'nowrap';
                 const strong = document.createElement('strong');
                 strong.textContent = x.name;
                 tdName.appendChild(strong);
+
                 const tdInfo = document.createElement('td');
                 tdInfo.style.fontSize = '12px';
                 tdInfo.style.lineHeight = '1.7';
                 tdInfo.style.color = 'var(--text-sec)';
                 tdInfo.textContent = `📞 ${x.phone || '-'}\n🎨 ${x.hobi || '-'}\n📝 ${x.bio || '-'}\n📱 ${x.medsos || '-'}`;
                 tdInfo.style.whiteSpace = 'pre-line';
+
                 const tdDate = document.createElement('td');
-                tdDate.style.whiteSpace = 'nowrap'; tdDate.style.color = 'var(--muted)'; tdDate.style.fontSize = '12px';
+                tdDate.style.whiteSpace = 'nowrap';
+                tdDate.style.color = 'var(--muted)';
+                tdDate.style.fontSize = '12px';
                 tdDate.textContent = (x.created_at || '').split('T')[0];
+
                 const tdAction = document.createElement('td');
                 tdAction.style.whiteSpace = 'nowrap';
+
                 const btn = document.createElement('button');
                 btn.className = 'btn-icon';
                 btn.style.color = 'var(--danger)';
@@ -2166,8 +1940,13 @@
                 btn.style.fontWeight = 'bold';
                 btn.textContent = 'Hapus';
                 btn.addEventListener('click', () => deleteMember(x.id));
+
                 tdAction.appendChild(btn);
-                tr.appendChild(tdName); tr.appendChild(tdInfo); tr.appendChild(tdDate); tr.appendChild(tdAction);
+
+                tr.appendChild(tdName);
+                tr.appendChild(tdInfo);
+                tr.appendChild(tdDate);
+                tr.appendChild(tdAction);
                 frag.appendChild(tr);
             });
             tbody.replaceChildren(frag);
@@ -2175,29 +1954,804 @@
 
         function startApp() {
             const sessionStr = sessionStorage.getItem('isLoggedIn');
-            if (!sessionStr || sessionStr !== 'true') {
+            if(!sessionStr || sessionStr !== 'true') {
                 document.getElementById('login-page').classList.remove('hidden');
                 document.getElementById('main-app').classList.add('hidden');
                 return;
             }
+
             document.getElementById('login-page').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
             document.getElementById('header-username').innerText = sessionStorage.getItem('username');
-            if (sessionStorage.getItem('isAdmin') === 'true') {
+
+            if(sessionStorage.getItem('isAdmin') === 'true') {
                 document.querySelector('.nav-item[data-tab="admin-panel"]').style.display = 'flex';
             }
+
             applyPreferences();
             switchTab('gallery');
         }
 
-        function boot() {
-            updateOnline();
-            const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
-            if (!isLoggedIn) setupLoginScene();
-            startApp();
-        }
+        document.addEventListener('DOMContentLoaded', startApp);
 
-        document.addEventListener('DOMContentLoaded', boot);
+        /* =====================================================================
+           PART 3 — JAVASCRIPT BLOCK: NATURE PHYSICS LOGIN MINIGAME
+           Hardware-adaptive Matter.js scene, 0% idle CPU when paused.
+           ===================================================================== */
+        (async function naturePhysicsLogin() {
+            'use strict';
+
+            const page      = document.getElementById('login-page');
+            const container = document.getElementById('canvas-container');
+            const canvas    = document.getElementById('physics-canvas');
+            const card      = document.getElementById('interactive-login-card');
+            const hint      = document.getElementById('game-hint');
+            const skipBtn   = document.getElementById('game-skip');
+            const backBtn   = document.getElementById('back-to-tree');
+
+            if (!page || !container || !canvas || !card) return;
+
+            /* ---------------- utils ---------------- */
+            const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+            const debounce = (fn, ms) => { let t = 0; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+            /* ---------------- graphics tiers ---------------- */
+            const TIERS = {
+                high: {
+                    positionIterations: 6,
+                    velocityIterations: 6,
+                    dprCap: 2,
+                    gradients: true,
+                    shadows: true,
+                    wind: true,
+                    particles: true
+                },
+                low: {
+                    positionIterations: 4,
+                    velocityIterations: 4,
+                    dprCap: 1,
+                    gradients: false,
+                    shadows: false,
+                    wind: false,
+                    particles: false
+                }
+            };
+
+            /**
+             * Runtime hardware probe.
+             * Low tier  -> < 4 logical cores OR < 4 GB RAM OR data-saver OR battery-saver.
+             * High tier -> 4+ cores AND 4+ GB RAM with no power-saving hints.
+             * `?gfx=high` / `?gfx=low` force a tier for QA.
+             */
+            async function detectTier() {
+                const cores = navigator.hardwareConcurrency || 2;
+                const mem = (typeof navigator.deviceMemory === 'number') ? navigator.deviceMemory : null;
+                const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                const saveData = !!(conn && conn.saveData);
+
+                let batterySaver = false;
+                if (typeof navigator.getBattery === 'function') {
+                    try {
+                        const b = await navigator.getBattery();
+                        batterySaver = (b.charging === false && b.level <= 0.20);
+                    } catch (_) { /* not permitted */ }
+                }
+
+                const weakCpu = cores < 4;
+                const weakRam = (mem !== null && mem < 4);
+                let key = (weakCpu || weakRam || saveData || batterySaver) ? 'low' : 'high';
+
+                const forced = new URLSearchParams(location.search).get('gfx');
+                if (forced === 'high' || forced === 'low') key = forced;
+
+                return { key, cfg: TIERS[key], cores, mem, saveData, batterySaver };
+            }
+
+            /* ---------------- card visibility control ---------------- */
+            let cardShown = false;
+            let booted = false;
+            let pauseFn  = () => {};
+            let resumeFn = () => {};
+            let resetFn  = () => {};
+
+            function showCard() {
+                if (cardShown) return;
+                cardShown = true;
+
+                card.classList.remove('hidden-card');
+                card.classList.add('visible-card');          // opacity + transform only
+                container.classList.add('dimmed');
+                hint.classList.add('dismissed');
+
+                pauseFn();                                   // Runner.stop() -> 0% CPU
+
+                setTimeout(() => {
+                    if (window.matchMedia('(pointer: fine)').matches) {
+                        const u = document.getElementById('member-username');
+                        if (u && !document.getElementById('member-fields').classList.contains('hidden')) {
+                            u.focus({ preventScroll: true });
+                        }
+                    }
+                }, 480);
+            }
+
+            function hideCard() {
+                if (!cardShown) return;
+                cardShown = false;
+
+                card.classList.remove('visible-card');
+                card.classList.add('hidden-card');
+                container.classList.remove('dimmed');
+                hint.classList.remove('dismissed');
+
+                resetFn();                                   // green apple back to the canopy
+                resumeFn();                                  // Runner.run() again
+            }
+
+            if (skipBtn) skipBtn.addEventListener('click', (e) => { e.preventDefault(); showCard(); });
+            if (backBtn) backBtn.addEventListener('click', (e) => { e.preventDefault(); hideCard(); });
+
+            // Safety net: if physics never boots, users must still be able to log in.
+            setTimeout(() => { if (!booted) showCard(); }, 3500);
+
+            /* ---------------- Matter.js bootstrap ---------------- */
+            let Matter;
+            try {
+                const mod = await import('https://cdn.jsdelivr.net/npm/matter-js@0.20.0/+esm');
+                Matter = (mod && mod.default && mod.default.Engine) ? mod.default : mod;
+                if (!Matter || !Matter.Engine) throw new Error('Matter.js unavailable');
+            } catch (err) {
+                console.warn('[minigame] Matter.js could not be loaded — falling back to the plain login form.', err);
+                showCard();
+                return;
+            }
+
+            const {
+                Engine, Runner, Bodies, Body, Composite,
+                Mouse, MouseConstraint, Events, Query, Sleeping
+            } = Matter;
+
+            const tierInfo = await detectTier();
+            const CFG = tierInfo.cfg;
+            document.documentElement.setAttribute('data-gfx-tier', tierInfo.key);
+
+            /* ---------------- engine ---------------- */
+            const engine = Engine.create({
+                enableSleeping: true,                        // idle bodies cost ~0 CPU
+                positionIterations: CFG.positionIterations,  // 6 (high) / 4 (low)
+                velocityIterations: CFG.velocityIterations
+            });
+            engine.gravity.y = 1;
+            engine.gravity.scale = 0.0012;
+
+            const world  = engine.world;
+            const runner = Runner.create();
+            const ctx    = canvas.getContext('2d', { alpha: true });
+
+            /* ---------------- scene constants ---------------- */
+            const STATIC_CAT = 0x0002;   // statics are invisible to the mouse constraint
+            const APPLE_CAT  = 0x0001;
+
+            const CANOPY_SHAPE = [
+                [-1.15,  0.35, 0.62],
+                [-0.60, -0.30, 0.68],
+                [ 0.00, -0.55, 0.72],
+                [ 0.60, -0.30, 0.68],
+                [ 1.15,  0.35, 0.62],
+                [-0.58,  0.70, 0.66],
+                [ 0.58,  0.70, 0.66],
+                [ 0.00,  0.64, 0.70]
+            ];
+
+            // Each slot sits exactly on top of a canopy circle (offsets are in canopyR units).
+            const APPLE_SLOTS = [
+                { x: -1.15, y: -0.27, color: 'red'   },
+                { x: -0.60, y: -0.98, color: 'red'   },
+                { x:  0.60, y: -0.98, color: 'red'   },
+                { x:  1.15, y: -0.27, color: 'red'   },
+                { x:  0.00, y: -1.27, color: 'green' }
+            ];
+
+            /* ---------------- mutable state ---------------- */
+            let W = 0, H = 0, dpr = 1;
+            const L = {};
+
+            let statics = [];
+            let apples = [];
+            let greenApple = null;
+            let basketSensor = null;
+            let mouseConstraint = null;
+
+            let particles = [];
+            let wind = [];
+
+            let running = false;
+            let rafId = 0;
+            let won = false;
+            let ready = false;
+
+            /* ---------------- layout ---------------- */
+            function computeLayout() {
+                W = container.clientWidth  || window.innerWidth;
+                H = container.clientHeight || window.innerHeight;
+
+                // LOW tier forces pixelRatio 1 to spare weak GPUs.
+                dpr = Math.min(window.devicePixelRatio || 1, CFG.dprCap);
+
+                const short = Math.min(W, H);
+                const wide  = W >= 720;
+
+                L.groundY = H - Math.max(36, H * 0.10);
+                L.treeX   = Math.round(W * (wide ? 0.21 : 0.28));
+                L.basketX = Math.round(W * (wide ? 0.79 : 0.72));
+
+                L.canopyR  = clamp(short * 0.125, 38, 92);
+                L.appleR   = clamp(short * 0.042, 15, 26);
+                L.canopyCX = L.treeX;
+                L.canopyCY = Math.max(L.canopyR * 1.95 + L.appleR + 14, L.groundY - H * 0.42);
+
+                L.basketW       = clamp(short * 0.17, 64, 116);
+                L.basketH       = L.basketW * 0.62;
+                L.basketTopHalf = L.basketW * 0.60;
+                L.basketBotHalf = L.basketW * 0.42;
+
+                L.trunkW   = clamp(short * 0.028, 12, 26);
+                L.trunkTop = Math.min(L.canopyCY + L.canopyR * 0.40, L.groundY - 40);
+            }
+
+            function sizeCanvas() {
+                canvas.width  = Math.max(1, Math.round(W * dpr));
+                canvas.height = Math.max(1, Math.round(H * dpr));
+                canvas.style.width  = W + 'px';
+                canvas.style.height = H + 'px';
+                // Matter.Mouse divides by (clientWidth / canvas.width * pixelRatio)
+                if (mouseConstraint) mouseConstraint.mouse.pixelRatio = dpr;
+            }
+
+            function appleSlotPosition(slot) {
+                return {
+                    x: L.canopyCX + slot.x * L.canopyR,
+                    y: L.canopyCY + slot.y * L.canopyR - L.appleR
+                };
+            }
+
+            /* ---------------- static world (tree, basket, bounds) ---------------- */
+            function buildStatics() {
+                statics.forEach(b => Composite.remove(world, b));
+                statics = [];
+
+                const add = (b) => { statics.push(b); Composite.add(world, b); return b; };
+                const base = {
+                    isStatic: true,
+                    friction: 0.9,
+                    restitution: 0.08,
+                    collisionFilter: { category: STATIC_CAT, mask: 0xFFFFFFFF, group: 0 },
+                    render: { visible: false }
+                };
+
+                /* world bounds */
+                add(Bodies.rectangle(W / 2, L.groundY + 80, W * 4, 160, { ...base, label: 'ground' }));
+                add(Bodies.rectangle(-60, H / 2, 120, H * 4, { ...base, label: 'wall-left' }));
+                add(Bodies.rectangle(W + 60, H / 2, 120, H * 4, { ...base, label: 'wall-right' }));
+
+                /* trunk */
+                add(Bodies.rectangle(
+                    L.treeX,
+                    L.trunkTop + (L.groundY - L.trunkTop) / 2,
+                    L.trunkW,
+                    Math.max(40, L.groundY - L.trunkTop),
+                    { ...base, label: 'trunk' }
+                ));
+
+                /* canopy — one circle per visual blob */
+                L.canopy = CANOPY_SHAPE.map(([ox, oy, or]) => {
+                    const r = or * L.canopyR;
+                    const x = L.canopyCX + ox * L.canopyR;
+                    const y = L.canopyCY + oy * L.canopyR;
+                    add(Bodies.circle(x, y, r, { ...base, friction: 0.95, label: 'canopy' }));
+                    return { x, y, r };
+                });
+
+                /* basket — funnel-shaped walls + floor + sensor */
+                const bx = L.basketX, by = L.groundY, bh = L.basketH;
+                const th = L.basketTopHalf, bt = L.basketBotHalf;
+                const thick = Math.max(6, L.basketW * 0.075);
+
+                const buildWall = (p1, p2) => {
+                    const dx = p2.x - p1.x;
+                    const dy = p2.y - p1.y;
+                    const len = Math.hypot(dx, dy);
+                    const angle = Math.atan2(-dx, dy);   // aligns the rect's local +Y with p1->p2
+                    return add(Bodies.rectangle((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, thick, len, {
+                        ...base, angle, friction: 0.95, restitution: 0.05, label: 'basket-wall'
+                    }));
+                };
+
+                buildWall({ x: bx - bt, y: by }, { x: bx - th, y: by - bh });
+                buildWall({ x: bx + bt, y: by }, { x: bx + th, y: by - bh });
+
+                add(Bodies.rectangle(bx, by - thick * 0.35, bt * 2, thick, {
+                    ...base, friction: 0.95, restitution: 0.02, label: 'basket-floor'
+                }));
+
+                basketSensor = add(Bodies.rectangle(bx, by - bh * 0.45, bt * 1.3, bh * 0.5, {
+                    ...base, isSensor: true, label: 'basket-sensor'
+                }));
+            }
+
+            /* ---------------- apples ---------------- */
+            function buildApples() {
+                apples = APPLE_SLOTS.map((slot) => {
+                    const p = appleSlotPosition(slot);
+                    const b = Bodies.circle(p.x, p.y, L.appleR, {
+                        isStatic: true,                      // parked on the tree until grabbed
+                        label: 'apple-' + slot.color,
+                        friction: 0.85,
+                        frictionStatic: 1.2,
+                        frictionAir: 0.008,
+                        restitution: 0.12,
+                        density: 0.0016,
+                        sleepThreshold: 90,
+                        collisionFilter: { category: APPLE_CAT, mask: 0xFFFFFFFF, group: 0 }
+                    });
+                    b.plugin = { color: slot.color, slot };
+                    Composite.add(world, b);
+                    return b;
+                });
+                greenApple = apples[4];
+            }
+
+            /* ---------------- touch + mouse picking ---------------- */
+            function pickApple(point) {
+                const direct = Query.point(apples, point)[0];
+                if (direct) return direct;
+
+                // fat-finger tolerance for small screens
+                let best = null, bestD = Infinity;
+                const tol = L.appleR + 14;
+                for (const a of apples) {
+                    const d = Math.hypot(a.position.x - point.x, a.position.y - point.y);
+                    if (d < tol && d < bestD) { bestD = d; best = a; }
+                }
+                return best;
+            }
+
+            // Capture-phase: release a parked apple into the physics world *before*
+            // Matter's own mousedown/touchstart handler runs, so MouseConstraint can grab it.
+            container.addEventListener('pointerdown', (ev) => {
+                if (!running) return;
+                const rect = canvas.getBoundingClientRect();
+                const p = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
+                const apple = pickApple(p);
+                if (apple && apple.isStatic) {
+                    Sleeping.set(apple, false);
+                    Body.setStatic(apple, false);
+                }
+            }, { capture: true, passive: true });
+
+            /* ---------------- particles & ambient wind ---------------- */
+            function spawnSplash(x, y) {
+                for (let i = 0; i < 26; i++) {
+                    particles.push({
+                        x, y,
+                        vx: (Math.random() - 0.5) * 6,
+                        vy: -2 - Math.random() * 5,
+                        life: 1,
+                        decay: 0.012 + Math.random() * 0.012,
+                        size: 1.5 + Math.random() * 3.5,
+                        hue: 40 + Math.random() * 40
+                    });
+                }
+            }
+
+            function updateParticles() {
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.vy += 0.22;
+                    p.vx *= 0.99;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life -= p.decay;
+                    if (p.life <= 0) particles.splice(i, 1);
+                }
+            }
+
+            function drawParticles() {
+                if (!particles.length) return;
+                ctx.save();
+                for (const p of particles) {
+                    ctx.globalAlpha = Math.max(0, p.life);
+                    ctx.fillStyle = `hsl(${p.hue}, 85%, 62%)`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            function initWind() {
+                wind.length = 0;
+                if (!CFG.wind) return;
+                const n = W < 600 ? 8 : 14;
+                for (let i = 0; i < n; i++) {
+                    wind.push({
+                        x: Math.random() * W,
+                        y: Math.random() * H * 0.85,
+                        vx: 0.25 + Math.random() * 0.55,
+                        vy: (Math.random() - 0.5) * 0.3,
+                        r: 2 + Math.random() * 3,
+                        rot: Math.random() * Math.PI,
+                        spin: (Math.random() - 0.5) * 0.03,
+                        a: 0.10 + Math.random() * 0.16
+                    });
+                }
+            }
+
+            function updateWind() {
+                for (const w of wind) {
+                    w.x += w.vx; w.y += w.vy; w.rot += w.spin;
+                    if (w.x > W + 14) { w.x = -14; w.y = Math.random() * H * 0.85; }
+                    if (w.y < -14) w.y = H * 0.85;
+                    if (w.y > H * 0.9) w.y = 0;
+                }
+            }
+
+            function drawWind() {
+                if (!wind.length) return;
+                ctx.save();
+                ctx.fillStyle = '#8FC79A';
+                for (const w of wind) {
+                    ctx.globalAlpha = w.a;
+                    ctx.beginPath();
+                    ctx.ellipse(w.x, w.y, w.r, w.r * 0.5, w.rot, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            /* ---------------- renderer ---------------- */
+            function drawTrunk() {
+                const { treeX, trunkW, trunkTop, groundY } = L;
+                const hb = trunkW * 0.5, ht = trunkW * 0.34;
+
+                ctx.beginPath();
+                ctx.moveTo(treeX - hb, groundY + 8);
+                ctx.quadraticCurveTo(treeX - ht * 1.25, (trunkTop + groundY) / 2, treeX - ht, trunkTop);
+                ctx.lineTo(treeX + ht, trunkTop);
+                ctx.quadraticCurveTo(treeX + ht * 1.25, (trunkTop + groundY) / 2, treeX + hb, groundY + 8);
+                ctx.closePath();
+
+                if (CFG.gradients) {
+                    const g = ctx.createLinearGradient(treeX - hb, 0, treeX + hb, 0);
+                    g.addColorStop(0,    '#4A3324');
+                    g.addColorStop(0.42, '#7A5941');
+                    g.addColorStop(0.62, '#5E4230');
+                    g.addColorStop(1,    '#38251A');
+                    ctx.fillStyle = g;
+                } else {
+                    ctx.fillStyle = '#5A4130';
+                }
+                ctx.fill();
+            }
+
+            function drawCanopy() {
+                if (!L.canopy) return;
+
+                if (CFG.gradients) {
+                    const glow = ctx.createRadialGradient(
+                        L.canopyCX, L.canopyCY, L.canopyR * 0.2,
+                        L.canopyCX, L.canopyCY, L.canopyR * 2.5
+                    );
+                    glow.addColorStop(0, 'rgba(126,190,140,0.22)');
+                    glow.addColorStop(1, 'rgba(126,190,140,0)');
+                    ctx.fillStyle = glow;
+                    ctx.beginPath();
+                    ctx.arc(L.canopyCX, L.canopyCY, L.canopyR * 2.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                L.canopy.forEach((c, i) => {
+                    ctx.beginPath();
+                    ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                    if (CFG.gradients) {
+                        const g = ctx.createRadialGradient(
+                            c.x - c.r * 0.35, c.y - c.r * 0.45, c.r * 0.12,
+                            c.x, c.y, c.r
+                        );
+                        g.addColorStop(0,    i % 2 ? '#8FC79A' : '#7CB98A');
+                        g.addColorStop(0.55, '#4F7A55');
+                        g.addColorStop(1,    '#2C4A34');
+                        ctx.fillStyle = g;
+                    } else {
+                        ctx.fillStyle = '#3E6446';
+                    }
+                    ctx.fill();
+                });
+            }
+
+            function drawBasket() {
+                const bx = L.basketX, by = L.groundY;
+                const th = L.basketTopHalf, bt = L.basketBotHalf, h = L.basketH;
+
+                ctx.beginPath();
+                ctx.moveTo(bx - th, by - h);
+                ctx.lineTo(bx + th, by - h);
+                ctx.lineTo(bx + bt, by);
+                ctx.lineTo(bx - bt, by);
+                ctx.closePath();
+
+                if (CFG.gradients) {
+                    const g = ctx.createLinearGradient(bx - th, 0, bx + th, 0);
+                    g.addColorStop(0,    '#5A3C29');
+                    g.addColorStop(0.38, '#A5763F');
+                    g.addColorStop(0.66, '#8B6135');
+                    g.addColorStop(1,    '#4E3423');
+                    ctx.fillStyle = g;
+                } else {
+                    ctx.fillStyle = '#7A5533';
+                }
+                ctx.fill();
+
+                // rim
+                ctx.lineWidth = Math.max(4, L.basketW * 0.06);
+                ctx.strokeStyle = CFG.gradients ? '#C69A55' : '#A87F44';
+                ctx.beginPath();
+                ctx.moveTo(bx - th, by - h);
+                ctx.lineTo(bx + th, by - h);
+                ctx.stroke();
+
+                // woven detail (high tier only)
+                if (CFG.gradients) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(bx - th, by - h);
+                    ctx.lineTo(bx + th, by - h);
+                    ctx.lineTo(bx + bt, by);
+                    ctx.lineTo(bx - bt, by);
+                    ctx.closePath();
+                    ctx.clip();
+
+                    ctx.strokeStyle = 'rgba(38,22,12,0.32)';
+                    ctx.lineWidth = 1.5;
+
+                    for (let i = 1; i < 5; i++) {
+                        const t = i / 5;
+                        const y = by - h + h * t;
+                        const half = th + (bt - th) * t;
+                        ctx.beginPath();
+                        ctx.moveTo(bx - half, y);
+                        ctx.lineTo(bx + half, y);
+                        ctx.stroke();
+                    }
+                    for (let i = 1; i < 7; i++) {
+                        const t = i / 7;
+                        ctx.beginPath();
+                        ctx.moveTo(bx - th + 2 * th * t, by - h);
+                        ctx.lineTo(bx - bt + 2 * bt * t, by);
+                        ctx.stroke();
+                    }
+                    ctx.restore();
+                }
+            }
+
+            function drawApples() {
+                const r = L.appleR;
+                for (const a of apples) {
+                    const isGreen = a.plugin.color === 'green';
+
+                    ctx.save();
+                    ctx.translate(a.position.x, a.position.y);
+                    ctx.rotate(a.angle);
+
+                    ctx.beginPath();
+                    ctx.arc(0, 0, r, 0, Math.PI * 2);
+                    if (CFG.gradients) {
+                        const g = ctx.createRadialGradient(-r * 0.35, -r * 0.42, r * 0.08, 0, 0, r * 1.05);
+                        if (isGreen) {
+                            g.addColorStop(0,    '#C6EE9A');
+                            g.addColorStop(0.5,  '#6FBF3E');
+                            g.addColorStop(1,    '#2F6B22');
+                        } else {
+                            g.addColorStop(0,    '#FF9585');
+                            g.addColorStop(0.5,  '#D8382C');
+                            g.addColorStop(1,    '#7C1610');
+                        }
+                        ctx.fillStyle = g;
+                    } else {
+                        ctx.fillStyle = isGreen ? '#4E9E32' : '#C3362A';
+                    }
+                    ctx.fill();
+
+                    // stem
+                    ctx.strokeStyle = CFG.gradients ? '#5A3A1E' : '#4A3120';
+                    ctx.lineWidth = Math.max(1.5, r * 0.11);
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(0, -r * 0.85);
+                    ctx.quadraticCurveTo(r * 0.16, -r * 1.35, r * 0.05, -r * 1.55);
+                    ctx.stroke();
+
+                    // leaf
+                    if (CFG.gradients) {
+                        ctx.beginPath();
+                        ctx.ellipse(r * 0.44, -r * 1.22, r * 0.34, r * 0.17, -0.5, 0, Math.PI * 2);
+                        ctx.fillStyle = '#5FA84A';
+                        ctx.fill();
+                    }
+
+                    ctx.restore();
+                }
+            }
+
+            function drawShadow() {
+                if (!CFG.shadows) return;
+                const g = ctx.createRadialGradient(
+                    L.basketX, L.groundY + 2, 2,
+                    L.basketX, L.groundY + 2, L.basketW * 1.5
+                );
+                g.addColorStop(0, 'rgba(0,0,0,0.42)');
+                g.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.ellipse(L.basketX, L.groundY + 4, L.basketW * 1.05, L.basketH * 0.30, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            function render() {
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, W, H);
+
+                if (CFG.shadows) drawShadow();
+                drawTrunk();
+                drawCanopy();
+                drawBasket();
+                drawApples();
+                if (CFG.wind) { updateWind(); drawWind(); }
+                if (CFG.particles) { updateParticles(); drawParticles(); }
+            }
+
+            /* ---------------- loop control (Runner + rAF) ---------------- */
+            function startRenderLoop() {
+                if (rafId) return;
+                const step = () => { rafId = requestAnimationFrame(step); render(); };
+                rafId = requestAnimationFrame(step);
+            }
+
+            function stopRenderLoop() {
+                if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+            }
+
+            function pauseEngine() {
+                if (!running) return;
+                running = false;
+                Runner.stop(runner);       // physics off
+                stopRenderLoop();          // rendering off -> 0% idle CPU/GPU
+            }
+
+            function resumeEngine() {
+                if (running || !ready) return;
+                running = true;
+                // Re-seed the timing accumulator so the engine doesn't "catch up".
+                runner.time = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+                runner.correction = 0;
+                Runner.run(runner, engine);
+                startRenderLoop();
+            }
+
+            pauseFn  = pauseEngine;
+            resumeFn = resumeEngine;
+            resetFn  = () => {
+                if (!greenApple) return;
+                won = false;
+                particles.length = 0;
+                Sleeping.set(greenApple, false);
+                Body.setStatic(greenApple, true);
+                Body.setPosition(greenApple, appleSlotPosition(greenApple.plugin.slot));
+                Body.setAngle(greenApple, 0);
+                Body.setVelocity(greenApple, { x: 0, y: 0 });
+                Body.setAngularVelocity(greenApple, 0);
+            };
+
+            /* ---------------- win detection ---------------- */
+            function onGreenInBasket() {
+                if (won) return;
+                won = true;
+
+                if (CFG.particles) {
+                    spawnSplash(L.basketX, L.groundY - L.basketH * 0.45);
+                }
+
+                // let the splash breathe, then freeze everything and reveal the card
+                setTimeout(showCard, CFG.particles ? 620 : 180);
+            }
+
+            Events.on(engine, 'collisionStart', (evt) => {
+                if (won) return;
+                for (const pair of evt.pairs) {
+                    const { bodyA, bodyB } = pair;
+                    if ((bodyA === greenApple && bodyB === basketSensor) ||
+                        (bodyB === greenApple && bodyA === basketSensor)) {
+                        onGreenInBasket();
+                        return;
+                    }
+                }
+            });
+
+            /* ---------------- resize / orientation ---------------- */
+            const handleResize = debounce(() => {
+                if (!ready) return;
+
+                computeLayout();
+                sizeCanvas();
+                buildStatics();
+
+                // Parked apples follow their new slots; free-flying ones stay in bounds.
+                for (const a of apples) {
+                    if (a.isStatic) {
+                        Body.setPosition(a, appleSlotPosition(a.plugin.slot));
+                    } else {
+                        Sleeping.set(a, false);
+                        Body.setPosition(a, {
+                            x: clamp(a.position.x, L.appleR, W - L.appleR),
+                            y: Math.min(a.position.y, L.groundY - L.appleR)
+                        });
+                    }
+                }
+
+                initWind();
+                render();
+            }, 220);
+
+            window.addEventListener('resize', handleResize);
+            window.addEventListener('orientationchange', handleResize);
+
+            /* ---------------- boot ---------------- */
+            computeLayout();
+            sizeCanvas();
+            buildStatics();
+            buildApples();
+            initWind();
+
+            // Mouse + Touch: Matter.Mouse.setElement() binds mousedown/mousemove/mouseup
+            // AND touchstart/touchmove/touchend natively when the canvas is supplied.
+            const mouse = Mouse.create(canvas);
+            mouse.pixelRatio = dpr;                 // keep CSS-px <-> canvas-px mapping exact
+
+            mouseConstraint = MouseConstraint.create(engine, {
+                mouse,
+                constraint: {
+                    stiffness: 0.22,
+                    damping: 0.12,
+                    angularStiffness: 0.9,
+                    render: { visible: false }
+                }
+            });
+            // Only grab real apples — statics use a different category.
+            mouseConstraint.collisionFilter.mask = APPLE_CAT;
+
+            Composite.add(world, mouseConstraint);
+            if (!world.constraints.includes(mouseConstraint.constraint)) {
+                Composite.add(world, mouseConstraint.constraint);
+            }
+
+            runner = Runner.create();
+            Runner.run(runner, engine);
+            running = true;
+            startRenderLoop();
+
+            ready = true;
+            booted = true;
+            document.body.classList.add('minigame-ready');
+
+            /* Stop everything if the app navigates away from the login page. */
+            const pageObserver = new MutationObserver(() => {
+                if (page.classList.contains('hidden')) {
+                    pauseEngine();
+                }
+            });
+            pageObserver.observe(page, { attributes: true, attributeFilter: ['class'] });
+
+        })();
     </script>
 </body>
-</html>
+    </html>
