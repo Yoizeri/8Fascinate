@@ -114,9 +114,16 @@
         @media (min-width: 480px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 768px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
 
-        #login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; position: relative; overflow: hidden; background: radial-gradient(900px 520px at 12% -10%, rgba(126, 178, 133, .30), transparent 62%), radial-gradient(700px 520px at 105% 110%, rgba(185, 139, 46, .18), transparent 62%), var(--forest-deep); }
+        #login-page {
+            min-height: 100vh; width: 100%;
+            display: flex; align-items: center; justify-content: center;
+            padding: 24px 16px; position: relative; overflow: hidden;
+            background: radial-gradient(900px 520px at 12% -10%, rgba(126, 178, 133, .30), transparent 62%),
+                        radial-gradient(700px 520px at 105% 110%, rgba(185, 139, 46, .18), transparent 62%),
+                        var(--forest-deep);
+        }
         .login-pattern { position: absolute; inset: 0; pointer-events: none; opacity: .07; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="%23FFFFFF" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/></svg>'); background-size: 72px; }
-        .login-card { position: relative; z-index: 1; width: 100%; max-width: 420px; padding: 34px 30px 28px; border-radius: 14px; border-top: 3px solid var(--gold); box-shadow: 0 30px 70px -34px rgba(0, 0, 0, .75); }
+        .login-card { position: relative; z-index: 5; width: 100%; max-width: 420px; padding: 34px 30px 28px; border-radius: 14px; border-top: 3px solid var(--gold); box-shadow: 0 30px 70px -34px rgba(0, 0, 0, .75); }
         .login-header { text-align: center; margin-bottom: 26px; }
         .login-header h1 { font-family: var(--serif); font-size: 40px; line-height: 1; color: var(--forest); margin-bottom: 10px; }
         body.dark-mode .login-header h1 { color: var(--text-main); }
@@ -262,15 +269,19 @@
         }
 
         /* =====================================================================
-           PART 1 — CSS BLOCK: NATURE PHYSICS LOGIN MINIGAME
+           NATURE PHYSICS LOGIN MINIGAME — CSS
            ===================================================================== */
 
-        /* --- Canvas layer (behind the login card, above the pattern) --- */
+        /* Canvas layer: strictly overlays the whole login page, above the
+           background pattern (z-index 1), interactive. */
         #canvas-container {
             position: absolute;
             inset: 0;
+            width: 100%;
+            height: 100%;
             z-index: 1;
-            touch-action: none;               /* no pull-to-refresh / scroll / dbl-tap zoom */
+            pointer-events: auto;
+            touch-action: none;
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
@@ -285,11 +296,11 @@
             display: block;
             width: 100%;
             height: 100%;
-            touch-action: none;               /* Safari fallback */
+            touch-action: none;
             pointer-events: auto;
         }
 
-        /* --- Instruction hint + skip escape hatch --- */
+        /* Instruction hint + skip escape hatch */
         #game-hint {
             position: absolute;
             left: 50%;
@@ -301,7 +312,7 @@
             max-width: 90vw;
             padding: 9px 10px 9px 18px;
             border-radius: 999px;
-            background: rgba(10, 26, 17, .58);
+            background: rgba(10, 26, 17, .62);
             border: 1px solid rgba(255, 255, 255, .16);
             color: #EAF2E7;
             font-size: 12px;
@@ -311,7 +322,6 @@
             text-align: center;
             -webkit-backdrop-filter: blur(6px);
             backdrop-filter: blur(6px);
-            pointer-events: none;
             transform: translateX(-50%) translateY(0);
             opacity: 1;
             transition: opacity 360ms ease, transform 360ms cubic-bezier(.4, 0, .2, 1);
@@ -340,7 +350,7 @@
         #game-skip:hover { background: rgba(255, 255, 255, .18); border-color: rgba(255, 255, 255, .45); }
         #game-skip:active { transform: scale(.94); }
 
-        /* --- Interactive login card: hardware-accelerated reveal --- */
+        /* Interactive login card — HIDDEN BY DEFAULT, revealed on win or skip */
         #interactive-login-card {
             z-index: 5;
             max-width: min(420px, 92vw);
@@ -375,7 +385,7 @@
                 visibility 0s linear 420ms;
         }
 
-        /* --- Back-to-tree button (top-left inside the card) --- */
+        /* Back-to-tree button */
         #back-to-tree {
             position: absolute;
             top: 12px;
@@ -400,7 +410,6 @@
         #back-to-tree:active { transform: scale(.9); }
         #back-to-tree svg { width: 19px; height: 19px; }
 
-        /* --- Narrow phone tuning --- */
         @media (max-width: 420px) {
             #interactive-login-card { max-width: 90vw; padding: 30px 20px 24px; }
             .login-header h1 { font-size: 32px; }
@@ -410,7 +419,6 @@
             .login-header h1 { font-size: 28px; }
         }
 
-        /* --- Respect reduced-motion: keep the game, calm the reveals --- */
         @media (prefers-reduced-motion: reduce) {
             #interactive-login-card,
             #interactive-login-card.visible-card,
@@ -424,12 +432,12 @@
     <div id="offline-bar">⚠️ Tidak ada koneksi internet</div>
 
     <!-- =====================================================================
-         PART 2 — HTML MARKUP: NATURE PHYSICS LOGIN PAGE
+         LOGIN PAGE — Nature Physics Minigame
          ===================================================================== -->
     <div id="login-page">
         <div class="login-pattern"></div>
 
-        <!-- Physics canvas layer -->
+        <!-- Physics canvas layer (z-index 1, above pattern, below card) -->
         <div id="canvas-container">
             <canvas id="physics-canvas"></canvas>
         </div>
@@ -440,7 +448,7 @@
             <button id="game-skip" type="button">Lewati</button>
         </div>
 
-        <!-- Interactive login card (hidden until the green apple lands) -->
+        <!-- Interactive login card — HIDDEN BY DEFAULT -->
         <div class="login-card hidden-card" id="interactive-login-card">
             <button id="back-to-tree" type="button" aria-label="Kembali ke pohon" title="Kembali ke pohon">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -1975,8 +1983,7 @@
         document.addEventListener('DOMContentLoaded', startApp);
 
         /* =====================================================================
-           PART 3 — JAVASCRIPT BLOCK: NATURE PHYSICS LOGIN MINIGAME
-           Hardware-adaptive Matter.js scene, 0% idle CPU when paused.
+           NATURE PHYSICS LOGIN MINIGAME
            ===================================================================== */
         (async function naturePhysicsLogin() {
             'use strict';
@@ -1991,9 +1998,10 @@
 
             if (!page || !container || !canvas || !card) return;
 
-            /* ---------------- utils ---------------- */
+            /* ---------------- small utils ---------------- */
             const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
             const debounce = (fn, ms) => { let t = 0; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+            const waitFrame = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
             /* ---------------- graphics tiers ---------------- */
             const TIERS = {
@@ -2017,12 +2025,6 @@
                 }
             };
 
-            /**
-             * Runtime hardware probe.
-             * Low tier  -> < 4 logical cores OR < 4 GB RAM OR data-saver OR battery-saver.
-             * High tier -> 4+ cores AND 4+ GB RAM with no power-saving hints.
-             * `?gfx=high` / `?gfx=low` force a tier for QA.
-             */
             async function detectTier() {
                 const cores = navigator.hardwareConcurrency || 2;
                 const mem = (typeof navigator.deviceMemory === 'number') ? navigator.deviceMemory : null;
@@ -2049,7 +2051,6 @@
 
             /* ---------------- card visibility control ---------------- */
             let cardShown = false;
-            let booted = false;
             let pauseFn  = () => {};
             let resumeFn = () => {};
             let resetFn  = () => {};
@@ -2091,9 +2092,6 @@
             if (skipBtn) skipBtn.addEventListener('click', (e) => { e.preventDefault(); showCard(); });
             if (backBtn) backBtn.addEventListener('click', (e) => { e.preventDefault(); hideCard(); });
 
-            // Safety net: if physics never boots, users must still be able to log in.
-            setTimeout(() => { if (!booted) showCard(); }, 3500);
-
             /* ---------------- Matter.js bootstrap ---------------- */
             let Matter;
             try {
@@ -2102,7 +2100,7 @@
                 if (!Matter || !Matter.Engine) throw new Error('Matter.js unavailable');
             } catch (err) {
                 console.warn('[minigame] Matter.js could not be loaded — falling back to the plain login form.', err);
-                showCard();
+                // The Skip button remains functional; the physics scene simply won't run.
                 return;
             }
 
@@ -2129,7 +2127,7 @@
             const ctx    = canvas.getContext('2d', { alpha: true });
 
             /* ---------------- scene constants ---------------- */
-            const STATIC_CAT = 0x0002;   // statics are invisible to the mouse constraint
+            const STATIC_CAT = 0x0002;
             const APPLE_CAT  = 0x0001;
 
             const CANOPY_SHAPE = [
@@ -2143,7 +2141,7 @@
                 [ 0.00,  0.64, 0.70]
             ];
 
-            // Each slot sits exactly on top of a canopy circle (offsets are in canopyR units).
+            // Slot offsets are in canopyR units, sitting on top of the canopy circles.
             const APPLE_SLOTS = [
                 { x: -1.15, y: -0.27, color: 'red'   },
                 { x: -0.60, y: -0.98, color: 'red'   },
@@ -2172,8 +2170,9 @@
 
             /* ---------------- layout ---------------- */
             function computeLayout() {
-                W = container.clientWidth  || window.innerWidth;
-                H = container.clientHeight || window.innerHeight;
+                // Prefer measured container; fall back to viewport.
+                W = container.clientWidth  || window.innerWidth  || 360;
+                H = container.clientHeight || window.innerHeight || 640;
 
                 // LOW tier forces pixelRatio 1 to spare weak GPUs.
                 dpr = Math.min(window.devicePixelRatio || 1, CFG.dprCap);
@@ -2204,7 +2203,6 @@
                 canvas.height = Math.max(1, Math.round(H * dpr));
                 canvas.style.width  = W + 'px';
                 canvas.style.height = H + 'px';
-                // Matter.Mouse divides by (clientWidth / canvas.width * pixelRatio)
                 if (mouseConstraint) mouseConstraint.mouse.pixelRatio = dpr;
             }
 
@@ -2215,7 +2213,7 @@
                 };
             }
 
-            /* ---------------- static world (tree, basket, bounds) ---------------- */
+            /* ---------------- static world ---------------- */
             function buildStatics() {
                 statics.forEach(b => Composite.remove(world, b));
                 statics = [];
@@ -2261,7 +2259,7 @@
                     const dx = p2.x - p1.x;
                     const dy = p2.y - p1.y;
                     const len = Math.hypot(dx, dy);
-                    const angle = Math.atan2(-dx, dy);   // aligns the rect's local +Y with p1->p2
+                    const angle = Math.atan2(-dx, dy);
                     return add(Bodies.rectangle((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, thick, len, {
                         ...base, angle, friction: 0.95, restitution: 0.05, label: 'basket-wall'
                     }));
@@ -2306,7 +2304,6 @@
                 const direct = Query.point(apples, point)[0];
                 if (direct) return direct;
 
-                // fat-finger tolerance for small screens
                 let best = null, bestD = Infinity;
                 const tol = L.appleR + 14;
                 for (const a of apples) {
@@ -2492,7 +2489,6 @@
                 }
                 ctx.fill();
 
-                // rim
                 ctx.lineWidth = Math.max(4, L.basketW * 0.06);
                 ctx.strokeStyle = CFG.gradients ? '#C69A55' : '#A87F44';
                 ctx.beginPath();
@@ -2500,7 +2496,6 @@
                 ctx.lineTo(bx + th, by - h);
                 ctx.stroke();
 
-                // woven detail (high tier only)
                 if (CFG.gradients) {
                     ctx.save();
                     ctx.beginPath();
@@ -2562,7 +2557,6 @@
                     }
                     ctx.fill();
 
-                    // stem
                     ctx.strokeStyle = CFG.gradients ? '#5A3A1E' : '#4A3120';
                     ctx.lineWidth = Math.max(1.5, r * 0.11);
                     ctx.lineCap = 'round';
@@ -2571,7 +2565,6 @@
                     ctx.quadraticCurveTo(r * 0.16, -r * 1.35, r * 0.05, -r * 1.55);
                     ctx.stroke();
 
-                    // leaf
                     if (CFG.gradients) {
                         ctx.beginPath();
                         ctx.ellipse(r * 0.44, -r * 1.22, r * 0.34, r * 0.17, -0.5, 0, Math.PI * 2);
@@ -2610,7 +2603,7 @@
                 if (CFG.particles) { updateParticles(); drawParticles(); }
             }
 
-            /* ---------------- loop control (Runner + rAF) ---------------- */
+            /* ---------------- loop control ---------------- */
             function startRenderLoop() {
                 if (rafId) return;
                 const step = () => { rafId = requestAnimationFrame(step); render(); };
@@ -2631,7 +2624,6 @@
             function resumeEngine() {
                 if (running || !ready) return;
                 running = true;
-                // Re-seed the timing accumulator so the engine doesn't "catch up".
                 runner.time = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
                 runner.correction = 0;
                 Runner.run(runner, engine);
@@ -2661,7 +2653,6 @@
                     spawnSplash(L.basketX, L.groundY - L.basketH * 0.45);
                 }
 
-                // let the splash breathe, then freeze everything and reveal the card
                 setTimeout(showCard, CFG.particles ? 620 : 180);
             }
 
@@ -2685,7 +2676,6 @@
                 sizeCanvas();
                 buildStatics();
 
-                // Parked apples follow their new slots; free-flying ones stay in bounds.
                 for (const a of apples) {
                     if (a.isStatic) {
                         Body.setPosition(a, appleSlotPosition(a.plugin.slot));
@@ -2705,17 +2695,23 @@
             window.addEventListener('resize', handleResize);
             window.addEventListener('orientationchange', handleResize);
 
-            /* ---------------- boot ---------------- */
+            /* ---------------- boot (after layout is ready) ---------------- */
+            // Ensure the container has real dimensions before we measure it.
+            await waitFrame();
+
+            // If the container reports 0 (e.g. hidden ancestor), wait one more frame.
+            if (!container.clientWidth || !container.clientHeight) {
+                await waitFrame();
+            }
+
             computeLayout();
             sizeCanvas();
             buildStatics();
             buildApples();
             initWind();
 
-            // Mouse + Touch: Matter.Mouse.setElement() binds mousedown/mousemove/mouseup
-            // AND touchstart/touchmove/touchend natively when the canvas is supplied.
             const mouse = Mouse.create(canvas);
-            mouse.pixelRatio = dpr;                 // keep CSS-px <-> canvas-px mapping exact
+            mouse.pixelRatio = dpr;
 
             mouseConstraint = MouseConstraint.create(engine, {
                 mouse,
@@ -2726,7 +2722,6 @@
                     render: { visible: false }
                 }
             });
-            // Only grab real apples — statics use a different category.
             mouseConstraint.collisionFilter.mask = APPLE_CAT;
 
             Composite.add(world, mouseConstraint);
@@ -2734,16 +2729,14 @@
                 Composite.add(world, mouseConstraint.constraint);
             }
 
-            runner = Runner.create();
             Runner.run(runner, engine);
             running = true;
             startRenderLoop();
 
             ready = true;
-            booted = true;
             document.body.classList.add('minigame-ready');
 
-            /* Stop everything if the app navigates away from the login page. */
+            // Stop everything if the app navigates away from the login page.
             const pageObserver = new MutationObserver(() => {
                 if (page.classList.contains('hidden')) {
                     pauseEngine();
@@ -2754,4 +2747,4 @@
         })();
     </script>
 </body>
-    </html>
+</html>
